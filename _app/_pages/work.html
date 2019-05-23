@@ -1,0 +1,21 @@
+---
+layout: page
+title: Works
+permalink: /work/
+desc: 作品・ワークス・TBC
+---
+
+    <h2>Personal Projects</h2>
+    {% for post in site.tags.works_personal %}
+      {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
+    {% endfor %}
+
+    <h2>Community Work</h2>
+    {% for post in site.tags.works_commercial %}
+      {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
+    {% endfor %}
+
+    <h2>Tools</h2>
+    {% for post in site.tags.works_tools %}
+      {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
+    {% endfor %}

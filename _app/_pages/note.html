@@ -1,0 +1,10 @@
+---
+layout: page
+title: Notes
+permalink: /note/
+desc: 筆記・ノート・TL;DR
+---
+
+{% for post in site.tags.notes %}
+  {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
+{% endfor %}

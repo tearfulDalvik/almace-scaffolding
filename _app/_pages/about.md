@@ -2,20 +2,41 @@
 layout: page
 title: About
 permalink: /about/
-desc: 示例頁面・サンプルページ・Example Page
+desc: 關於我・私について・Introduction
+css: |
+  @media (min-width: 640px) {
+    .content header {
+        background: url(https://img.ifengge.cn/images/5f2a42ad711ad67df4597346862a3bfb.png) no-repeat;
+        background-position: 95% center;
+    }
+  }
 ---
 
-This is an example About page.
+## Me
 
-Sparanoid is a design studio operated by Tunghsiao Liu. You can ping me on [Twitter](https://twitter.com/tunghsiao) or send correspondence to [t@sparanoid.com](mailto:t@sparanoid.com).
+- keybase: [@dalvik](https://keybase.io/dalvik/)
+- website: [dalvik.sh](https://dalvik.sh/)
+- blog: [Dalvik's Blog](https://www.ifengge.me/)
+
+## Contact
+
+- email: [meizaizheli@dalvik.sh](mailto:meizaizheli@ifengge.cn)
+- phone: +1 (336) 505-7043
+- telegram: [@GTX108O](https://t.me/GTX108O)
+- twitter: [@tearfulDalvik](https://twitter.com/tearfulDalvik)
+- github: [@tearfulDalvik](https://github.com/tearfulDalvik)
+
+## Donate
+
+[Buy me a cup of coffee](https://donate.ifengge.cn/)
+{: .largetype}
 
 ## Colophon
 
-[AMSF](https://sparanoid.com/lab/amsf/) ([Source](https://github.com/sparanoid/sparanoid.com)) -
-[GitHub](https://github.com/) -
-[CloudFront](https://aws.amazon.com/cloudfront/) -
-[Textmate](https://macromates.com/)
+<a href="https://www.vultr.com/?ref=7021079-3B"><img src="https://www.vultr.com/dist/img/brand/logo_v_onwhite.svg" style="width: 10vw;margin:0 !important;"></a>
 
-All posts are &copy; Sparanoid, Inc., all rights reserved.
+## (･ิω･ิ)
 
-*[AMSF]: Almace Scaffolding
+I have an immature suggestion: Follow me 😳  
+Come to Steam and have fun with me, [Steam Community :: tearfulDalvik](http://steamcommunity.com/id/tearfuldalvik)  
+You can leave an anonymous message to me incognito at [sarahah.com](https://tearfulDalvik.sarahah.com) 
