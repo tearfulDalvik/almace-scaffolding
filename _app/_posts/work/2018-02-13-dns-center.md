@@ -62,7 +62,7 @@ css: |
   }
 ---
 
-This is a DNS manager panel running with PowerDNS, what does this mean you can have a **Desktop and Mobile Friendly** frontend for self-hosted-DNS management.
+This is a DNS manager panel running with PowerDNS, and this means you can have a **Desktop and Mobile Friendly** frontend for self-hosted-DNS management.
 
 <p class="browser"><img src="https://img.ifengge.cn/images/imageb5570.png" alt="Preview"></p>
 
