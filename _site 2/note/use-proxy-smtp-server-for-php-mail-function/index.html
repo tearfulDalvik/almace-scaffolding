@@ -1,0 +1,218 @@
+<!doctype html>
+
+<html lang="en">
+
+<!--
+  Apply head only for dev environment, this is required for jekyll to
+  insert livereload scripts
+-->
+
+  <head>
+
+
+
+  <meta charset="utf-8">
+
+
+<title>Use SMTP Server by Proxy for PHP - Dalvik's Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Define a description for better SEO result -->
+<meta name="description" content="开发时应注意此坑，还是应该直接上 PHPMailer It is worth noting that the mail() function is not suitable for larger volumes of email in a loop. This function opens and closes an SMTP socket for each email, which is not very efficient. 原理 PHP 使用系统自带的...">
+
+<!-- Cheome Web App theme color -->
+<meta name="theme-color" content="#ff00b4">
+
+<!-- Feed URL -->
+<link rel="alternate" href="/feed.xml" type="application/atom+xml">
+
+<!-- Site icons -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.png" type="image/png"><link rel="icon" href="/favicon.svg?assets-inline-assets-keep" sizes="any" type="image/svg+xml"><link rel="mask-icon" href="/mask-icon.svg" color="#ff00b4">
+
+<!-- Chrome Web App manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Main CSS -->
+<link rel="stylesheet" href="/assets/themes/curtana/css/app.css?assets-inline">
+
+<!-- Canonical links, avoid duplicate content problems -->
+<link rel="canonical" href="http://0.0.0.0:4321/note/use-proxy-smtp-server-for-php-mail-function/">
+
+<!-- DNS prefetching for static files -->
+
+
+<!-- Head hooks -->
+
+
+
+  </head>
+
+<!-- Open Graph and Twitter Cards support -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Dalvik's Blog">
+<meta property="og:title" content="Use SMTP Server by Proxy for PHP">
+<meta property="og:url" content="http://0.0.0.0:4321/note/use-proxy-smtp-server-for-php-mail-function/">
+<meta property="og:description" content="开发时应注意此坑，还是应该直接上 PHPMailer It is worth noting that the mail() function is not suitable for larger volumes of email in a loop. This function opens and closes an SMTP socket for each email, which is not very efficient. 原理 PHP 使用系统自带的...">
+<meta property="og:image" content="http://0.0.0.0:4321/logo.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+
+  <meta name="twitter:site" content="@tearfulDalvik">
+
+
+
+  <meta name="twitter:creator" content="@tearfulDalvik">
+
+
+
+  <meta property="article:published_time" content="2018-01-05T00:00:00+08:00">
+  <meta property="article:modified_time" content="2019-06-16T20:21:57+08:00">
+  <meta name="twitter:label1" value="Words">
+  <meta name="twitter:data1" value="118 words">
+  <meta name="twitter:label2" value="Reading time">
+  <meta name="twitter:data2" value="Less than 1 min">
+
+<!-- Post specified styles -->
+<style data-assets-inline>
+  :root {
+    
+
+    
+
+    
+
+    
+  }
+
+  body {
+    
+  }
+
+  
+  
+    
+</style>
+<!-- Main navigation with current page / categoriy highlighted -->
+<nav class="navigation">
+  <ul>
+    <li >
+        <a href="/">Dalvik's Blog</a>
+      </li>
+    <li >
+        <a href="/work/">Work</a>
+      </li>
+    <li class=current>
+        <a href="/note/">Note</a>
+      </li>
+    <li >
+        <a href="/about/">About</a>
+      </li>
+    
+  </ul>
+</nav>
+<!-- Main content wrap -->
+<main class="content " role=main>
+  <!-- Post-wide custom CSS -->
+
+
+<!-- Article wrapper, limit width -->
+<article lang="en">
+
+  <!-- Post title -->
+  <header style="     ">
+
+    <h1 class="" title="Use SMTP Server by Proxy for PHP" data-title="Use SMTP Server by Proxy for PHP">
+      Use SMTP Server by Proxy for PHP<span class="dot dot--post"> </span>
+    </h1>
+
+    
+      <small>
+        By <span rel="author">Dalvik Shen</span>
+        on <time datetime="2018-01-05T00:00:00+08:00">Jan 5, 2018</time>
+      </small>
+    
+
+    
+
+  </header>
+
+  <!-- Post content -->
+  <div class="post-content">
+    <blockquote>
+  <p>开发时应注意此坑，还是应该直接上 PHPMailer<br />
+It is worth noting that the mail() function is not suitable for larger volumes of email in a loop. This function opens and closes an SMTP socket for each email, which is not very efficient.</p>
+</blockquote>
+
+<h2 id="原理">原理</h2>
+<p>PHP 使用系统自带的 sendmail 二进制文件发送邮件，但是我们可以在 php.ini 中更换 sendmail 程序。
+ssmtp 可以让我们使用外部的 smtp 服务器像 sendmail 一样发送邮件，我们只需将 php.ini 中的 sendmail 更换为 ssmtp 即可。</p>
+
+<h2 id="安装">安装</h2>
+<p><code class="highlighter-rouge">yum install -y ssmtp which</code></p>
+
+<h2 id="配置">配置</h2>
+<p>首先用 which 找到 ssmtp 的安装位置：<code class="highlighter-rouge">which ssmtp</code>，然后编辑配置 ssmtp 配置文件：<code class="highlighter-rouge">vim /etc/ssmtp/ssmtpd.conf</code>
+<strong>里面的说明很详细，但是特别注意如果你的 smtp 服务器要求验证，需要手动添加两行：</strong></p>
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AuthUser</span>=<span class="n">username</span>
+<span class="n">AuthPass</span>=<span class="n">password</span>
+</code></pre></div></div>
+<p>搞定后还需要配置一下 php.ini：<code class="highlighter-rouge">vim /etc/php.ini</code>，搜索 sendmail 并将 sendmail 路径替换为 ssmtp 路径即可。最后别忘了重启：</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart php-fpm
+systemctl restart httpd
+</code></pre></div></div>
+
+
+    
+    
+
+    
+  </div>
+
+</article>
+
+</main>
+<!-- Footer section -->
+
+  <footer class="footer">
+    <ul>
+      <li><a href="/">Dalvik's Blog</a></li>
+
+      
+        <li>
+          <a href="https://sparanoid.com/lab/amsf/" title="Almace Scaffolding with theme Curtana">AMSF</a>
+        </li>
+      
+
+      
+    </ul>
+  </footer>
+
+
+<!-- Theme scripts -->
+<script src="/assets/themes/curtana/js/app.js?assets-inline"></script>
+
+<!-- User scripts -->
+<script src="/assets/js/user.js?assets-inline"></script>
+
+<!-- Lightense Images -->
+
+
+<!-- Service Worker  -->
+
+
+<!-- Google Analytics -->
+<script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-131388356-1', 'auto');
+      ga('set', 'anonymizeIp', true);
+      ga('send', 'pageview');
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js"></script>
+
+<!-- Foot hooks -->
+
+
+<!-- Finale -->
+</html>

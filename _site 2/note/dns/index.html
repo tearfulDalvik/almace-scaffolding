@@ -1,0 +1,266 @@
+<!doctype html>
+
+<html lang="en">
+
+<!--
+  Apply head only for dev environment, this is required for jekyll to
+  insert livereload scripts
+-->
+
+  <head>
+
+
+
+  <meta charset="utf-8">
+
+
+<title>What is DNS - Dalvik's Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Define a description for better SEO result -->
+<meta name="description" content="国内有关现代的 DNS 中文资料少之又少，对 DNS 的了解大都仅限于 A - AAAA 之间，我就在此将这些坑记下吧。 网域名称系统（英文：Domain Name System，缩写：DNS）是互联网的一项服务。它作为将域名和 IP 地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS 使用 TCP 和 UDP 端口 53。当前，对于每一级域名长度的限制是 63 个字符，域名总长度则不能超过 253 个字符。 Table of Contents 根、顶和二级域名 域名是怎样查询的 DNSSEC：RRSIG 和 DS 记录 NS 和 SOA 记录 PTR 反向解析记录 DA......">
+
+<!-- Cheome Web App theme color -->
+<meta name="theme-color" content="#ff00b4">
+
+<!-- Feed URL -->
+<link rel="alternate" href="/feed.xml" type="application/atom+xml">
+
+<!-- Site icons -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.png" type="image/png"><link rel="icon" href="/favicon.svg?assets-inline-assets-keep" sizes="any" type="image/svg+xml"><link rel="mask-icon" href="/mask-icon.svg" color="#ff00b4">
+
+<!-- Chrome Web App manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Main CSS -->
+<link rel="stylesheet" href="/assets/themes/curtana/css/app.css?assets-inline">
+
+<!-- Canonical links, avoid duplicate content problems -->
+<link rel="canonical" href="http://0.0.0.0:4321/note/dns/">
+
+<!-- DNS prefetching for static files -->
+
+
+<!-- Head hooks -->
+
+
+
+  </head>
+
+<!-- Open Graph and Twitter Cards support -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Dalvik's Blog">
+<meta property="og:title" content="What is DNS">
+<meta property="og:url" content="http://0.0.0.0:4321/note/dns/">
+<meta property="og:description" content="国内有关现代的 DNS 中文资料少之又少，对 DNS 的了解大都仅限于 A - AAAA 之间，我就在此将这些坑记下吧。 网域名称系统（英文：Domain Name System，缩写：DNS）是互联网的一项服务。它作为将域名和 IP 地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS 使用 TCP 和 UDP 端口 53。当前，对于每一级域名长度的限制是 63 个字符，域名总长度则不能超过 253 个字符。 Table of Contents 根、顶和二级域名 域名是怎样查询的 DNSSEC：RRSIG 和 DS 记录 NS 和 SOA 记录 PTR 反向解析记录 DA......">
+<meta property="og:image" content="http://0.0.0.0:4321/logo.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+
+  <meta name="twitter:site" content="@tearfulDalvik">
+
+
+
+  <meta name="twitter:creator" content="@tearfulDalvik">
+
+
+
+  <meta property="article:published_time" content="2018-02-02T00:00:00+08:00">
+  <meta property="article:modified_time" content="2019-05-23T21:00:16+08:00">
+  <meta name="twitter:label1" value="Words">
+  <meta name="twitter:data1" value="332 words">
+  <meta name="twitter:label2" value="Reading time">
+  <meta name="twitter:data2" value="1 min">
+
+<!-- Post specified styles -->
+<style data-assets-inline>
+  :root {
+    
+
+    
+
+    
+
+    
+  }
+
+  body {
+    
+  }
+
+  
+  
+    
+</style>
+<!-- Main navigation with current page / categoriy highlighted -->
+<nav class="navigation">
+  <ul>
+    <li >
+        <a href="/">Dalvik's Blog</a>
+      </li>
+    <li >
+        <a href="/work/">Work</a>
+      </li>
+    <li class=current>
+        <a href="/note/">Note</a>
+      </li>
+    <li >
+        <a href="/about/">About</a>
+      </li>
+    
+  </ul>
+</nav>
+<!-- Main content wrap -->
+<main class="content " role=main>
+  <!-- Post-wide custom CSS -->
+
+
+<!-- Article wrapper, limit width -->
+<article lang="en">
+
+  <!-- Post title -->
+  <header style="     ">
+
+    <h1 class="" title="What is DNS" data-title="What is DNS">
+      What is DNS<span class="dot dot--post"> </span>
+    </h1>
+
+    
+      <small>
+        By <span rel="author">Dalvik Shen</span>
+        on <time datetime="2018-02-02T00:00:00+08:00">Feb 2, 2018</time>
+      </small>
+    
+
+    
+
+  </header>
+
+  <!-- Post content -->
+  <div class="post-content">
+    <p>国内有关现代的 DNS 中文资料少之又少，对 DNS 的了解大都仅限于 A - AAAA 之间，我就在此将这些坑记下吧。</p>
+
+<blockquote>
+  <p><strong>网域名称系统</strong>（英文：<strong>Domain Name System</strong>，缩写：DNS）是互联网的一项服务。它作为将域名和 IP 地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS 使用 TCP 和 UDP 端口 53。当前，对于每一级域名长度的限制是 63 个字符，域名总长度则不能超过 253 个字符。</p>
+</blockquote>
+
+<h2 class="no_toc" id="table-of-contents">Table of Contents</h2>
+<ul id="markdown-toc">
+  <li><a href="#domain-level" id="markdown-toc-domain-level">根、顶和二级域名</a></li>
+  <li><a href="#how-dns-work" id="markdown-toc-how-dns-work">域名是怎样查询的</a></li>
+  <li><a href="#dnssec" id="markdown-toc-dnssec">DNSSEC：RRSIG 和 DS 记录</a></li>
+  <li><a href="#soa" id="markdown-toc-soa">NS 和 SOA 记录</a></li>
+  <li><a href="#ptr" id="markdown-toc-ptr">PTR 反向解析记录</a></li>
+  <li><a href="#dane" id="markdown-toc-dane">DANE：TLSA 记录与 DNSSEC 的搭配</a></li>
+  <li><a href="#cname-flattening" id="markdown-toc-cname-flattening">CNAME Flattening</a></li>
+  <li><a href="#ttl" id="markdown-toc-ttl">TTL 缓存时间</a></li>
+</ul>
+
+<h2 id="domain-level">根、顶和二级域名</h2>
+<ul>
+  <li>使用 dig 软件查询一个域名： <code class="highlighter-rouge">dig example.com</code> ，会发现诸如 example.com 的域名并不完整，它的完整写法是 <em>example.com.</em> ，最后的这一个点就是<strong>根域名</strong>，在日常使用中，因为所有的域名都带有这一个点，我们通常就将其省略。如果为这个命令加上一个 <code class="highlighter-rouge">+trace</code> 参数，就可以看到它首先会查询 “<code class="highlighter-rouge">.</code>” 这个域名，而全球的 13 台根域名服务器的 ip 地址往往被硬编码（hardcode）在操作系统中。</li>
+  <li>然后 dig 软件会向根域名服务器查询 com. 域名的域名服务器，这里的 com（类似的有 cn, hk, me 等）就是 <strong>顶级域名（TLD）</strong>，你仍然可以注册顶级域名<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> ，但其条件要求十分苛刻。</li>
+  <li>再然后就是我们喜闻乐见的 <strong>二级域名（SLD）</strong>了，二级域名注册得最多，也相对便宜，这里的 example 就是二级域名了。</li>
+</ul>
+
+<p>与这个逻辑类似的，如果你有了一个二级域名，其下级域名你就可以随意定义。</p>
+
+<h2 id="how-dns-work">域名是怎样查询的</h2>
+<p>如果你购买过域名，你也许就为你的域名设置过 DNS 服务器（nameservers），这些服务器将负责你的域名的解析工作。它往往是两个不相同的域名，那么，如果域名服务器用了域名，域名服务器的域名该如何解析呢？<br />
+这就要提到 <strong>胶水记录（glue records）</strong>了，胶水记录在注册商填写，是向上级域名数据库中添加指定主机的 A 或 AAAA 记录，也就是说，查询域名服务器的地址应当去上一级域名的域名服务器中查询，而通常这个主机记录不能当作普通 DNS 使用，因为浏览器并不会查询胶水记录。</p>
+
+<h2 id="dnssec">DNSSEC：RRSIG 和 DS 记录</h2>
+<p>DNS 协议并不安全，正如 HTTP 一样。而 DNSSEC 的目的就引入了非对称加密技术到 DNS 查询的过程当中。
+在启用了 DNSSEC 的域名，Whois 记录会显示 DNSSEC 的状态，而 DS（Delegation Signer）记录保存在上级域名服务器中，它显示了公钥的 Hash 值。在每次查询中都会返回一个 RRSIG 记录，这个记录是自动生成的，使用私钥加密，也就是说只能通过你发布的公钥（发布在域名服务器的 DNSKEY 记录中）解密，这就保证了传输的安全性。</p>
+
+<h2 id="soa">NS 和 SOA 记录</h2>
+<p>SOA 的记录确定了一个 Zone（可以简单理解成一个域名）的开始，它包含了一个主要的权威域名服务器、邮箱和 TTL 等内容。而 NS 记录则保存着该域名的主要和备用权威域名服务器。</p>
+
+<h2 id="ptr">PTR 反向解析记录</h2>
+<p>严格来说这一项非常特殊，但它也属于 DNS 系统的一部分。PTR 记录是将 IP 地址翻译成域名的记录，常用于垃圾邮件鉴定。它有专门的反向解析服务器，在网络运营商处设置。如果你是租赁的 VPS，则 VPS 控制面板一般可以设置。</p>
+
+<h2 id="dane">DANE：TLSA 记录与 DNSSEC 的搭配</h2>
+<p>TLSA 记录体现了什么端口什么协议用的什么证书，只有启用了 DNSSEC 后才有意义。我认为和 HPKP 非常类似，差别在于 TLSA 记录不会被缓存。
+配置好 TLSA 和 DNSSEC 后，就相当于为域名启用了 <strong>DANE（DNS-based Authentication of Named Entities）</strong>  ，DANE 的状态可以在 <a href="https://ssl-tools.net/">SSL-Tools</a> 中检测。</p>
+
+<h2 id="cname-flattening">CNAME Flattening</h2>
+<p>CNAME Flattening<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> 是一项加速 DNS 解析的技术，可参见 <a href="https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/">Introducing CNAME Flattening: RFC-Compliant CNAMEs at a Domain’s Root</a>，它的原理是将 CNAME 翻译成 A 记录的工作交给 DNS 服务器，这将大大节省 CNAME 域名的查询时间。目前的服务商（Rage4，Cloudflare）大都只支持根域名的 CNAME Flattening，但这不意味着这项技术只能用于根域名：如果你使用 Powerdns 自建 DNS，你会发现它的 ALIAS 记录对任何主机均适用。</p>
+
+<h2 id="ttl">TTL 缓存时间</h2>
+<p><strong>TTL（Time- To-Live）</strong>在域名解析中表示了一条域名解析记录在 DNS 服务器上缓存的时间，单位为秒。也就是说，如果你希望减轻 DNS 服务器的负担，TTL 就应尽量长，如果希望在更换解析后反应时间短，TTL 就应尽量短。</p>
+
+<h2 class="no_toc" id="剩下的">剩下的</h2>
+<p>有关 DNS 的原理最近折腾的就这些了，剩下的比如 TXT MX 等记录国内有很多资料，百度一下就行啦！</p>
+
+<h2 class="no_toc" id="references">References</h2>
+<p><a href="https://zh.wikipedia.org/zh-hans/%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F">域名系统 - 维基百科，自由的百科全书</a><br />
+<a href="https://www.ibm.com/support/knowledgecenter/SSWSR9_11.6.0/com.ibm.mdshs.inspuser.doc/topics/c_inspuser_trigger_record_glue_record_differences.html">IBM Knowledge Center - The difference between a trigger record and a glue record</a><br />
+<a href="https://tools.ietf.org/html/rfc4509">RFC 4509 - Use of SHA-256 in DNSSEC Delegation Signer (DS) Resource Records (RRs)</a><br />
+<a href="https://tools.ietf.org/html/rfc2181">RFC 2181 - Clarifications to the DNS Specification</a></p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>ICANN已在2015年允许注册顶级域名，但其条件和审查及其严格：<a href="https://newgtlds.icann.org/en/applicants/global-support/faqs/faqs-en">Frequently-Asked-Questions-ICANN-New-gTLDs</a>. <a href="#fnref:1" class="reversefootnote">&#8617;&#xfe0e;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>部分DNS提供商称其为ANAME或其它名称，这是因为该标准并没有普及导致的命名不规范，通常也理解为私有类型。 <a href="#fnref:2" class="reversefootnote">&#8617;&#xfe0e;</a></p>
+    </li>
+  </ol>
+</div>
+
+
+    
+    
+
+    
+  </div>
+
+</article>
+
+</main>
+<!-- Footer section -->
+
+  <footer class="footer">
+    <ul>
+      <li><a href="/">Dalvik's Blog</a></li>
+
+      
+        <li>
+          <a href="https://sparanoid.com/lab/amsf/" title="Almace Scaffolding with theme Curtana">AMSF</a>
+        </li>
+      
+
+      
+    </ul>
+  </footer>
+
+
+<!-- Theme scripts -->
+<script src="/assets/themes/curtana/js/app.js?assets-inline"></script>
+
+<!-- User scripts -->
+<script src="/assets/js/user.js?assets-inline"></script>
+
+<!-- Lightense Images -->
+
+
+<!-- Service Worker  -->
+
+
+<!-- Google Analytics -->
+<script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-131388356-1', 'auto');
+      ga('set', 'anonymizeIp', true);
+      ga('send', 'pageview');
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js"></script>
+
+<!-- Foot hooks -->
+
+
+<!-- Finale -->
+</html>

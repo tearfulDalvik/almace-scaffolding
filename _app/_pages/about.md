@@ -10,18 +10,49 @@ css: |
         background-position: 95% center;
     }
   }
+
+  .media-links li.twitter {
+    margin-right: 32px;
+  }
+  
+  .media-links li.twitter a {
+    width: 35px;
+    height: 29px;
+    background-image: url('https://yoooooooo.tk/cdn/img/about/twitter.svg');
+  }
+  
+  .media-links li.twitter:hover a {
+    background-image: url('https://yoooooooo.tk/cdn/img/about/twitter-hover.svg');
+  }
+  
+  .media-links li.github {
+    margin-right: 31px;
+  }
+  
+  .media-links li.github a {
+    width: 29px;
+    height: 35px;
+    background-image: url('https://yoooooooo.tk/cdn/img/about/github.svg');
+  }
+  
+  .media-links li.github:hover a {
+    background-image: url('https://yoooooooo.tk/cdn/img/about/github-hover.svg');
+  }
+  
+  .media-links li.flickr {
+    margin-right: 36px;
+  }
 ---
 
-## Me
+# Gufeng Shen
 
-- keybase: [@dalvik](https://keybase.io/dalvik/)
-- website: [dalvik.sh](https://dalvik.sh/)
+[dalvik.sh](https://dalvik.sh/) - [Résumé](https://go.ifengge.cn/resume)
 
 ## Contact
 
-- email: [meizaizheli@ifengge.cn](mailto:meizaizheli@ifengge.cn)
-- phone: +1 (336) 505-7043
+- keybase: [@dalvik](https://keybase.io/dalvik/)
 - telegram: [@GTX108O](https://t.me/GTX108O)
+- email: [meizaizheli@ifengge.cn](mailto:meizaizheli@ifengge.cn)
 - twitter: [@tearfulDalvik](https://twitter.com/tearfulDalvik)
 - github: [@tearfulDalvik](https://github.com/tearfulDalvik)
 
@@ -30,13 +61,16 @@ css: |
 [Buy me a cup of coffee](https://donate.ifengge.cn/)
 {: .largetype}
 
-## Colophon
-
-<a href="https://www.vultr.com/?ref=7021079-3B"><img src="https://www.vultr.com/media/icon_onwhite.svg" style="width: 10vw;margin:0 !important;"></a>
-All posts are © Gufeng Shen, all rights reserved.
-
 ## (･ิω･ิ)
 
 I have an immature suggestion: Follow me 😳  
 Come to Steam and have fun with me, [Steam Community :: tearfulDalvik](http://steamcommunity.com/id/tearfuldalvik)  
-You can leave an anonymous message to me incognito at [sarahah.com](https://tearfulDalvik.sarahah.com) 
+You can leave an anonymous message to me incognito at [sarahah.com](https://tearfulDalvik.sarahah.com)
+
+## Colophon
+
+<p><a href="https://sparanoid.com/lab/amsf/"><abbr title="Almace Scaffolding">AMSF</abbr></a> (<a href="https://github.com/sparanoid/sparanoid.com">Source</a>) - <a href="https://github.com/">GitHub</a> - <a href="https://aws.amazon.com/cloudfront/">CloudFront</a> - <a href="https://neovim.io/">NeoVim</a></p>
+<a href="https://www.vultr.com/?ref=7021079-3B"><img src="https://www.vultr.com/media/icon_onwhite.svg" style="width: 10vw;margin:0 !important;"></a>
+
+
+All posts are © Gufeng Shen, all rights reserved.
