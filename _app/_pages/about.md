@@ -16,7 +16,6 @@ css: |
 
 - keybase: [@dalvik](https://keybase.io/dalvik/)
 - website: [dalvik.sh](https://dalvik.sh/)
-- blog: [Dalvik's Blog](https://www.ifengge.me/)
 
 ## Contact
 
@@ -33,9 +32,8 @@ css: |
 
 ## Colophon
 
-<p><a href="https://sparanoid.com/lab/amsf/"><abbr title="Almace Scaffolding">AMSF</abbr></a> (<a href="https://github.com/sparanoid/sparanoid.com">Source</a>) - <a href="https://github.com/">GitHub</a> - <a href="https://aws.amazon.com/cloudfront/">CloudFront</a> - <a href="https://macromates.com/">Textmate</a></p>
-
 <a href="https://www.vultr.com/?ref=7021079-3B"><img src="https://www.vultr.com/media/icon_onwhite.svg" style="width: 10vw;margin:0 !important;"></a>
+All posts are © Gufeng Shen, all rights reserved.
 
 ## (･ิω･ิ)
 
