@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Time Machine Stops Disk From Partitioning
+title: Time Machine Stops Disk from Partitioning
 category: note
 permalink: note/time-machine-stops-disk-from-partitioning/
 tags: notes

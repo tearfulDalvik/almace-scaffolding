@@ -20,7 +20,7 @@ css: |
 
 ## Contact
 
-- email: [meizaizheli@dalvik.sh](mailto:meizaizheli@ifengge.cn)
+- email: [meizaizheli@ifengge.cn](mailto:meizaizheli@ifengge.cn)
 - phone: +1 (336) 505-7043
 - telegram: [@GTX108O](https://t.me/GTX108O)
 - twitter: [@tearfulDalvik](https://twitter.com/tearfulDalvik)
@@ -33,7 +33,9 @@ css: |
 
 ## Colophon
 
-<a href="https://www.vultr.com/?ref=7021079-3B"><img src="https://www.vultr.com/dist/img/brand/logo_v_onwhite.svg" style="width: 10vw;margin:0 !important;"></a>
+<p><a href="https://sparanoid.com/lab/amsf/"><abbr title="Almace Scaffolding">AMSF</abbr></a> (<a href="https://github.com/sparanoid/sparanoid.com">Source</a>) - <a href="https://github.com/">GitHub</a> - <a href="https://aws.amazon.com/cloudfront/">CloudFront</a> - <a href="https://macromates.com/">Textmate</a></p>
+
+<a href="https://www.vultr.com/?ref=7021079-3B"><img src="https://www.vultr.com/media/icon_onwhite.svg" style="width: 10vw;margin:0 !important;"></a>
 
 ## (･ิω･ิ)
 

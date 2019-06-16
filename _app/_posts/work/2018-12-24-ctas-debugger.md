@@ -7,7 +7,7 @@ tags: works_commercial
 plugin: lightense
 ---
 
-A Debug Tool for [CTAS Student System](http://172.20.2.205.cqu.pt/ctas/). This tool includes support of both macOS and Windows, ready to install in an offline environment.
+A Debug Tool for [CTAS Student System](http://172.20.2.205.cqu.pt/ctas/). This tool includes support of both macOS and Windows, and it is ready to install in an offline environment.
 
 ### License
 
@@ -27,7 +27,7 @@ This program is a crack of the CTAS Student System. As such, it is not subject t
 - Multiple file problems support
 - Unlock copying, selecting and context menu in every CTAS pages
 - Use shortcut keys to complete your homework!
-- APIs available and an iOS remote client is included, you can also custom your remote control on other platforms.
+- APIs available and an iOS remote client is included. You can also custom your remote control on other platforms.
 
 ## Installation
 

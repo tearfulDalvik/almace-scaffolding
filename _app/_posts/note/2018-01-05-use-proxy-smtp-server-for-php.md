@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Use Proxy SMTP Server For PHP
+title: Use SMTP Server by Proxy for PHP
 category: note
 permalink: note/use-proxy-smtp-server-for-php-mail-function/
 tags: notes
