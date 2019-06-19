@@ -58,7 +58,7 @@ css: |
 
 ## Donate
 
-[Buy me a cup of coffee](https://donate.ifengge.cn/)
+[Buy me a cup of coffee](https://sponsor.ifengge.cn/)
 {: .largetype}
 
 ## (･ิω･ิ)
