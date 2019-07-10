@@ -2,7 +2,7 @@
 layout: post
 title: Notes on Discrete Mathematics
 category: note
-permalink: note/notes-on-discrete-math
+permalink: note/notes-on-discrete-math/
 tags: notes
 ---
 

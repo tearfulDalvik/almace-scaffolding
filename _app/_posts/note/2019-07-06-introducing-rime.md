@@ -2,7 +2,7 @@
 layout: post
 title: RIME - An Intelligent ChsIME
 category: note
-permalink: note/introducing-rime
+permalink: note/introducing-rime/
 heading-bg: https://yoooooooo.tk/cdn/img/home-watermarks.svg
 heading-bg-color: "#171a1f"
 heading-bg-text: "#fff"
