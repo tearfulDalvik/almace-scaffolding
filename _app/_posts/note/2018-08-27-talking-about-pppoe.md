@@ -16,7 +16,7 @@ The Point-to-Point Protocol over Ethernet (PPPoE) is a network protocol for enca
   <summary>PPPoE has two stages (Click to expand)</summary>
   <ul>
     <li>When a client wants to establish a PPPoE connection, it must send a broadcast packet to discover PPPoE servers, then select one. This process is called the PPPoE Discovery (PAD).</li>
-    <li>When a server was chosen, PPP session starts, LCP packets appear. The client and server start to negotiate, authentic, etc. Once these are done, the client will get an IP address and the radius server allows gateways to route for this client.</li>
+    <li>When a server was chosen, the PPP session starts, LCP packets appear. The client and server start to negotiate, authentic, etc. Once these are done, the client will get an IP address and the radius server allows gateways to route for this client.</li>
   </ul>
 </details>
 

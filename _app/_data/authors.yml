@@ -7,7 +7,7 @@
 # {{ author.web }}: used in atom feed
 # {{ author.twitter }}: used by Twitter Cards
 default:
-  name:         Dalvik Shen
+  name:         Gufeng Shen
   email:        t@ifengge.cn
-  web:          https://ifengge.cn/
+  web:          https://dalvik.sh/
   twitter:      tearfulDalvik
