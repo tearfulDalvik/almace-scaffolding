@@ -16,11 +16,11 @@ plugin: lightense
 
 ## What's This?
 In a general word, this is an Input Engine that could handle any languages in the world rather than just an Input Method, ergo it can handle Emoji, Greek Alphabets, Symbols, and any Unicode characters easefully, and of course, it is super fast.  
-It is also fun that this IME requires amount of customize via editing configuration files.
+It is also fun that this IME requires dozens of customizing via editing configuration files.
 
 ## Symbol Suggestions
 ![](https://img.ifengge.cn/images/5ae7ad79efdf526da83c4faa3958f0c0.png){: .size-right.no-resize}
-If you type a symbol like 「?」, RIME will suggest you both full and half width symbol of 「?」, as well as other forms of which in Unicode, such as 「¿」,「‽」, and 「⸘」.
+If you type a symbol like 「?」, RIME will suggest you both full and half-width symbol of 「?」, as well as other forms of which in Unicode, such as 「¿」,「‽」, and 「⸘」.
 ###### _pinyin_simp.custom.yaml
 ```yaml
 patch:
@@ -30,7 +30,7 @@ patch:
 
 ```
 ## Custom Shortcuts
-![](https://img.ifengge.cn/images/7a360be5a689b993049aec446de7f49a.png){: .size-left.no-resize}
+![](https://img.ifengge.cn/images/28607c7a7a8a65c598479b61171e8c24.png){: .size-left.no-resize}
 You can even customize dictionary to provide shortcuts, which means you can type ```/em``` to enter frequently used Emojis, or ```/ar``` to type arrows
 ###### _pinyin_simp.custom.yaml
 ```yaml
@@ -39,9 +39,26 @@ patch:
     symbols:
       "/em": [😀,😁,😂,😃,😄,😅,😆,😉,😊,😋,😎,😍,😘,😗,😙,😚,😇,😐,😑,😶,😏,😣,😥,😮,😯,😪,😫,😴,😌,😛,😜,😝,😒,😓,😔,😕,😲,😷,😖,😞,😟,😤,😢,😭,😦,😧,😨,😬,😰,😱,😳,😵,😡,😠]
       "/ar": [⬆,↗,➡,↘,⬇,↙,⬅,↖,↕,↔,↩,↪,⤴,⤵,🔃,🔄,🔙,🔚,🔛,🔜,🔝]
-      "/dn": [⌘, ⌥, ⇧, ⌃, ⎋, ⇪, , ⌫, ⌦, ↩︎, ⏎, ↑, ↓, ←, →, ↖, ↘, ⇟, ⇞]
+      "/pc": [⌘, ⌥, ⇧, ⌃, ⎋, ⇪, , ⌫, ⌦, ↩︎, ⏎, ↑, ↓, ←, →, ↖, ↘, ⇟, ⇞]
 ```
   
 ## Quick Menu
 ![](https://img.ifengge.cn/images/39226827eded528c633e88445f14a898.png){: .size-right.no-resize}
+Defaultly, to reach out this menu you just need to press ``` Control(⌃) + ` ```  
+
+This menu provides several options to change input engines, which provides flavored input methods and different language supports. In the submenu of each engine, its option can be fully customized.
+
+This menu can switch between Chinese and English (Of course it can also be done by just pressing ⇧), full or half-width for symbols, suggest Emojis by words or not and even encodings!
+
+After a configuration file has been changed, press ``` ⌃ + ⌥ + ` ``` to take effects.
+
+## Mixed Typing &amp; Super Fast
+These pictures demonstrated RIME's mixed input ability. With dictionary customize, RIME can offer special characters input by regular 26 keys. Additional, RIME is super fast either. Its react speed taken me aback when I have my dictionary over 50000 words.
+
+|
+:-: | :-:
+English and Chinese | Emoji by words
+![eng](https://img.ifengge.cn/images/a1759048c6440e677b9a995d9bd5ba57.png){: .no-resize} | ![emoji](https://img.ifengge.cn/images/126422ef2331c59b6f44852c8f2561d5.png){: .no-resize}
+Phonetic Input | Jargons
+![phonetic](https://img.ifengge.cn/images/82e7a96c5b19ec3fa70e7e1f2e9fd671.png){: .no-resize} | ![dic](https://img.ifengge.cn/images/0344279d9a3b800abc76bc97cc036ce0.png){: .no-resize}
 
