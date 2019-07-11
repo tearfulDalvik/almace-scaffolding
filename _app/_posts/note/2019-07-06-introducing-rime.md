@@ -46,7 +46,7 @@ patch:
 ![](https://img.ifengge.cn/images/39226827eded528c633e88445f14a898.png){: .size-right.no-resize}
 Defaultly, to reach out this menu you just need to press ``` Control(⌃) + ` ```  
 
-This menu provides several options to change input engines, which provides flavored input methods and different language supports. In the submenu of each engine, its option can be fully customized.
+This menu provides several options to change input maneuver, which provides flavored input methods and different language supports. In the submenu of each engine, its option can be fully customized.
 
 This menu can switch between Chinese and English (Of course it can also be done by just pressing ⇧), full or half-width for symbols, suggest Emojis by words or not and even encodings!
 
@@ -62,3 +62,12 @@ English and Chinese | Emoji by words
 Phonetic Input | Jargons
 ![phonetic](https://img.ifengge.cn/images/82e7a96c5b19ec3fa70e7e1f2e9fd671.png){: .no-resize} | ![dic](https://img.ifengge.cn/images/0344279d9a3b800abc76bc97cc036ce0.png){: .no-resize}
 
+## Intelligent IME Knows My Mind
+Multiple language users always have trouble in switching IMEs since they might want to type different languages in different apps. 
+RIME will remember what input maneuver is used in each app latestly, and it will adapt apps in the next time.
+
+It can recognize Vim, iTerm, Alfred, etc by default. Besides, you can define it explicitly in configuration files.
+
+## MISC
+[Official Site](https://rime.im/)
+{: .largetype}
