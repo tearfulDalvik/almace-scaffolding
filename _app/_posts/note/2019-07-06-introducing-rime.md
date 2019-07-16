@@ -3,7 +3,7 @@ layout: post
 title: RIME - An Intelligent ChsIME
 category: note
 permalink: note/introducing-rime/
-heading-bg: https://yoooooooo.tk/cdn/img/home-watermarks.svg
+heading-bg: https://d1.yoooooooo.tk/cdn/img/home-watermarks.svg
 heading-bg-color: "#171a1f"
 heading-bg-text: "#fff"
 scheme-bg: "#171a1f"
@@ -59,7 +59,7 @@ These pictures demonstrated RIME's mixed input ability. With dictionary customiz
 :-: | :-:
 English and Chinese | Emoji by words
 ![eng](https://img.ifengge.cn/images/a1759048c6440e677b9a995d9bd5ba57.png){: .no-resize} | ![emoji](https://img.ifengge.cn/images/126422ef2331c59b6f44852c8f2561d5.png){: .no-resize}
-Phonetic Input | Jargons
+Phonetic | Jargons
 ![phonetic](https://img.ifengge.cn/images/82e7a96c5b19ec3fa70e7e1f2e9fd671.png){: .no-resize} | ![dic](https://img.ifengge.cn/images/0344279d9a3b800abc76bc97cc036ce0.png){: .no-resize}
 
 ## Intelligent IME Knows My Mind
