@@ -55,4 +55,4 @@ deploy:
   script:
     - echo "$K8S_SECRET_RSYNC_BLOG_KEY"
     - chown 48:48 _site/ -R
-    - sshpass -p "$K8S_SECRET_RSYNC_BLOG_KEY" rsync -azvhPX —-delete --progress "_site/" "rsync@$K8S_SECRET_RSYNC_BLOG_REMOTE_IP::blog"
+    - sshpass -p "$K8S_SECRET_RSYNC_BLOG_KEY" rsync -azvhPX --delete --progress "_site/" "rsync@$K8S_SECRET_RSYNC_BLOG_REMOTE_IP::blog"
