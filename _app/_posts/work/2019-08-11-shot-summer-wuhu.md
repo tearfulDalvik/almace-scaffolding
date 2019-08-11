@@ -12,6 +12,7 @@ heading-bg-text: "#fefe61"
 scheme-link: "#f57e00"
 scheme-hover: "#f57e00"
 scheme-bg: "#00453a"
+scheme-text: "#aaa"
 tags: works_photo
 ---
 

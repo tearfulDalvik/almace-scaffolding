@@ -1,9 +1,9 @@
 ---
 layout: post
-title: PHP based DNS Panel
+title: DNS Panel
 category: work
 permalink: work/php-based-dns-panel/
-tags: works_personal
+tags: works_commercial 
 scheme-text: "#000"
 scheme-link: "#a73300"
 scheme-hover: "#ff4e00"
