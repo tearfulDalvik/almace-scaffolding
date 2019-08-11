@@ -19,3 +19,8 @@ desc: 作品・ワークス・TBC
     {% for post in site.tags.works_tools %}
       {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
     {% endfor %}
+
+    <h2>Photographs</h2>
+    {% for post in site.tags.works_photo %}
+      {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
+    {% endfor %}
