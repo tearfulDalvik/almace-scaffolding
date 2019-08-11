@@ -16,6 +16,10 @@ scheme-text: "#aaa"
 tags: works_photo
 ---
 
-## Wuhu, China (2019 Summer)
+## Wuhu, Anhui • China (2019 Summer)
 [View at Dalvik's Gallery](https://img.ifengge.cn/album/gJg)
+{: .largetype}
+
+## Zhenjiang, Jiangsu • China (2019 Summer)
+[View at Dalvik's Gallery](https://img.ifengge.cn/album/7da)
 {: .largetype}
