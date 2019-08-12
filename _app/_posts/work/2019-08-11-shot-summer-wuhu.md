@@ -20,6 +20,7 @@ tags: works_photo
 [View at Dalvik's Gallery](https://img.ifengge.cn/album/gJg)
 {: .largetype}
 
-## Zhenjiang, Jiangsu • China (2019 Summer)
+## Zhenjiang, Jiangsu • China 
+Zhenjiang is a surprisingly meaningful city to me, so I would rather keep those original files. Besides, most of them are taken just at will from my iPhone.
 [View at Dalvik's Gallery](https://img.ifengge.cn/album/7da)
 {: .largetype}
