@@ -21,6 +21,7 @@ tags: works_photo
 {: .largetype}
 
 ## Zhenjiang, Jiangsu • China 
-Zhenjiang is a surprisingly meaningful city to me, so I would rather keep those original files. Besides, most of them are taken just at will from my iPhone.
+Zhenjiang is a surprisingly meaningful city to me, so I would rather keep those original files. Besides, most of them are taken just at will from my iPhone.  
+
 [View at Dalvik's Gallery](https://img.ifengge.cn/album/7da)
 {: .largetype}
