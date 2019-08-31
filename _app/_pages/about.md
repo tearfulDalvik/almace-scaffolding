@@ -44,7 +44,7 @@ css: |
   }
 ---
 
-# Gufeng Shen<sub>aka. Dalvik Shen</sub>
+# Gufeng Shen&nbsp;<sub>aka. Dalvik</sub>
 
 [dalvik.sh](https://dalvik.sh/) - [Résumé](https://go.ifengge.cn/resume)
 
