@@ -44,8 +44,8 @@ css: |
   }
 ---
 
-# Gufeng Shen&nbsp;<sub>aka. Dalvik</sub>
-
+# Gufeng Shen  
+<small>(a.k.a. Dalvik Shen, tearfulDalvik)</small>  
 [dalvik.sh](https://dalvik.sh/) - [Résumé](https://go.ifengge.cn/resume)
 
 ## Contact
