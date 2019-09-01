@@ -1,3 +1,4 @@
+# Travis is slow, I recommend use CircleCI for CI process
 sudo: false
 language: node_js
 cache:
