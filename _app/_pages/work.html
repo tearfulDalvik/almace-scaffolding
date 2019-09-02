@@ -20,6 +20,11 @@ desc: 作品・ワークス・TBC
       {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
     {% endfor %}
 
+    <h2>Graphic Design</h2>
+    {% for post in site.tags.works_graphic %}
+      {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
+    {% endfor %}
+
     <h2>Photographs</h2>
     {% for post in site.tags.works_photo %}
       {% include themes/{{ site.amsf_theme }}/includes/page-item.html %}
