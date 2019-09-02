@@ -2,7 +2,7 @@
 layout: post
 title: HTAA Recruit Post
 category: work
-permalink: work/dalcho/
+permalink: work/htaa-recruit/
 tags: works_graphic
 scheme-link: "#d9dce1"
 plugin: lightense
