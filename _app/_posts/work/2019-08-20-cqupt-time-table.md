@@ -1,8 +1,8 @@
 ---
 layout: post
-title: CQUPT Classtable
+title: Calendarista
 category: work
-permalink: work/cqupt-time-table/
+permalink: work/calendarista/
 tags: works_personal
 ---
 
