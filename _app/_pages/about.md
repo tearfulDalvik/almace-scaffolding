@@ -67,9 +67,15 @@ Come to Steam and have fun with me, [Steam Community :: tearfulDalvik](http://st
 You can leave an anonymous message to me incognito at [sarahah.com](https://tearfulDalvik.sarahah.com)
 
 ## Colophon
-
+<p>那天气总是阴沉的，如铁石心肠
+<br>
+见过大的峡谷吗？
+<br>
+丰盈，草木断成一截
+<br>
+<small>Granted by <a href="https://twitter.com/daze2331">CDing</a></small>
+</p>
 <p><a href="https://sparanoid.com/lab/amsf/"><abbr title="Almace Scaffolding">AMSF</abbr></a> (<a href="https://github.com/sparanoid/sparanoid.com">Source</a>) - <a href="https://github.com/">GitHub</a> - <a href="https://aws.amazon.com/cloudfront/">CloudFront</a> - <a href="https://neovim.io/">NeoVim</a></p>
 <a href="https://www.vultr.com/?ref=7021079-3B"><img src="https://www.vultr.com/media/icon_onwhite.svg" style="width: 10vw;margin:0 !important;"></a>
-
 
 All posts are © Gufeng Shen, all rights reserved.
