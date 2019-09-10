@@ -45,7 +45,7 @@ css: |
 ---
 
 # Gufeng Shen&nbsp;&nbsp;<small><cite>(a.k.a. tearfulDalvik)</cite></small>  
-[dalvik.sh](https://dalvik.sh/) - [Résumé](https://go.ifengge.cn/resume)
+[ifengge.cn](https://ifengge.cn/) - [Résumé](https://go.ifengge.cn/resume)
 
 ## Contact
 
