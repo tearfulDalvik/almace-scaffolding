@@ -173,7 +173,7 @@ service_worker:
 google_analytics:
   enabled:      true
   id:           UA-131388356-1
-  url:          https://www.googletagmanager.com/gtag/js?id=UA-131388356-2
+  url:          https://www.googletagmanager.com/gtag/js?id=UA-131388356-1
 
 # Site Twitter account handle
 twitter:        tearfulDalvik
