@@ -9,12 +9,6 @@
       gtag('js', new Date());
       gtag('config', '{{ site.google_analytics.id }}');
     </script>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src=""></script>
-<script>
-</script>
-
     <script async src="{{ site.google_analytics.url }}"></script>
   {%- endif -%}
 {%- endcapture -%}
