@@ -44,7 +44,7 @@ Then the simple server has authorization code. In other words, our plugin has an
 ##  Verifying user's eligibility
 {:toc #verify-users}
 We'll attach the access token to our user account APIs to check whether this user has access to our server, download Dalvik's Club ID profile, and register this player's Mojang profile to our database.  
-As mentioned in [Creating an authorize URL](#createing-authorization-url), we'll store the refresh token to the player's metadata.
+As mentioned in [Creating an Authorization URL](#createing-authorization-url), we'll store the refresh token to the player's metadata.
 
 ##  Player's data synchronizing
 {:toc #data-synchronizing}
