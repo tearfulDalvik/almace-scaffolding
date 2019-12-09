@@ -1,6 +1,6 @@
 ---
 layout: post
-title: The RakishLand's Auth Flow
+title: The Rakish-Land's Auth Flow
 category: note
 permalink: note/rakishland-authflow/
 tags: notes
