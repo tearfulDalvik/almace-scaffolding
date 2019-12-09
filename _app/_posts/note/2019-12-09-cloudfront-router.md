@@ -6,10 +6,10 @@ permalink: note/cloudfront-origin-router/
 tags: notes
 ---
 
-CloudFront delivers websites to users from the nearest locations. Meanwhile, it forward requests that are not cached or not permitted to be cached to your origin servers. However, it is not flexible enough and neither smart enough since it cannot automatically decide the fastest origin based on the response time from CloudFront servers, cannot differentiate original execution timeout and connect timeout, etc.
+CloudFront delivers websites to users from the nearest locations. Meanwhile, it forward requests that are not cached or not permitted to be cached to your origin servers. However, it is not flexible enough and neither smart enough since it cannot automatically decide the fastest origin based on the response time from edge nodes to origin servers, cannot differentiate execution timeout and connect timeout, etc.
 
 ## Lambda × CloudFront
-AWS has a service called Lambda which offers a serverless script execution environment. When you bring it to CloudFront, with replication on each edge node, it is called Lambda@Edge. Then you can use a script to amend the request before CloudFront performs it to the original server.
+AWS has a service called Lambda which offers a serverless script execution environment. When you bring it to CloudFront, with replication on every edge node, it is called Lambda@Edge. Then you can use a script to amend requests before CloudFront sends it to the original server.
 > Lambda@Edge only supports[^1] `nodejs8.10`, `nodejs10.x`, or `python3.7` even though Go and other languages can be uploaded on the setup page. Besides, Lambda@Edge has only one second of execution time.
   
 To start, given that Lambda@Edge is a form of AWS Lambda, you can use the examples illustrated in [Building Lambda Functions with Python](https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model.html). It is worth noticing that the parameter `event` has a structure defined here: [Lambda@Edge Event Structure](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html).  
@@ -51,29 +51,29 @@ You may need a watchdog so as to avoid timeout:
 ```python
 def guard():
     time.sleep(0.9)
-    ... publish a default value
+    ... publish a default server
 ```
 ```python
 threading.Thread(target=guard).start()
 ```
 
-After this, you have to implement a listener that only accept the first result from all threads, then you can determine the fastest origin when CloudFront is going to initiate a connection to the origin, then change the origin request to the fastest responder in the handler:
+After this, you have to implement a listener that only accept the first result from all threads, then you can determine the fastest origin when CloudFront is going to initiate a connection, and finally, you can redirect the request to the fastest responder in the handler:
 ```python
 request["origin"]["custom"]["domainName"] = choice["host"]
 request["origin"]["custom"]["port"] = choice["port"]
 ```
 
-You might not have to determine the fastest origin each time the CloudFront is about to initiate a connection to an original server, so you have to make sure that you implemented a caching mechanism. 
+You might not have to determine the fastest one each time when CloudFront is about to initiate a connection to an original server, so you have to make sure that you implemented a caching mechanism. 
 
 
 ## Performances
 Once this is deployed you can view logs in the CloudWatch console.
 
-`1ms` for most situations
+`1ms` for common situations
 
 ![5e7bc941389a060b9dd929ece54ba406.png](https://img.ifengge.cn/images/5e7bc941389a060b9dd929ece54ba406.png){: .size-small}  
 
-`800+ms` to update cached choice
+`800+ms` to update cached origin
 
 ![5a80397f4b5bd92b601a27af966771b1.png](https://img.ifengge.cn/images/5a80397f4b5bd92b601a27af966771b1.png){: .size-small}  
 
