@@ -28,7 +28,7 @@ SERVERS = [
 ]
 ```
 
-You can make a simple HTTP request to determine the fastest origin then using the following code:
+You can make a simple HTTP request to determine the fastest origin by using the following code:
 ```python
 # s: Server Object
 def evaluate(s):
@@ -57,7 +57,7 @@ def guard():
 threading.Thread(target=guard).start()
 ```
 
-After this, you have to implement a listener that only accept the first result from all threads, then you can determine the fastest origin when CloudFront is going to initiate a connection, and finally, you can redirect the request to the fastest responder in the handler:
+After this, you have to implement a listener that only accept the first result from all threads, and finally, redirect the request to the fastest responder in the handler:
 ```python
 request["origin"]["custom"]["domainName"] = choice["host"]
 request["origin"]["custom"]["port"] = choice["port"]

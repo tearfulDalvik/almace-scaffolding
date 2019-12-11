@@ -129,7 +129,7 @@ feed:           /feed.xml
 # URLs for these fields
 #
 # Default:      https://sparanoid.com
-url:            https://ifengge.me
+url:            https://dalvik.sh
 
 # Media assets URL
 #
