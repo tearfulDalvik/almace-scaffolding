@@ -11,8 +11,6 @@ scheme-hover: "#fff"
 last-modified: 201711242329
 ---
 
-> Workflow 被 Apple 收购后也免费了，它可以让很多事情自动化，却不需要很多编程基础。
-
 ## 用 Workflow 翻译剪切板内容
 [添加到 Workflow](https://workflow.is/workflows/0ace2b0aecdf4ff1a77ce2dcb49f4ca5)
 

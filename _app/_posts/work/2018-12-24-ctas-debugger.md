@@ -3,7 +3,7 @@ layout: post
 title: CTAS Debugger
 category: work
 permalink: work/ctas-debugger/
-tags: works_commercial
+tags: works_community
 plugin: lightense
 ---
 

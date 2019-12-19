@@ -3,7 +3,7 @@ layout: post
 title: Gitbook Image Viewer
 category: work
 permalink: work/gitbook-imageviewer/
-tags: works_commercial
+tags: works_community
 last-modified: 201707231146
 ---
 
