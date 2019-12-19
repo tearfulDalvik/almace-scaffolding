@@ -1,12 +1,12 @@
 ---
 layout: post
-title: CQUPT Reserve Proxy
+title: CQUPT Reverse Proxy
 category: work
 permalink: work/cqupt-rproxy/
 tags: works_commercial
 ---
 
-To make our school's internal resources accessible from the internet, I built a reserve proxy to expose everything behind our firewall to the internet.
+To make our school's internal resources accessible from the internet, I built a reverse proxy to expose everything behind our firewall to the internet.
 
 > **Disclaimer**: Everything is protected via Cloudflare Access and Origin Pull is enabled to ensure that only me and the people I authorized can access the endpoint.
 
