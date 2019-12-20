@@ -6,16 +6,12 @@ permalink: work/cqupt-rproxy/
 tags: works_community
 ---
 
-> **Important**: `endpoint.domain` denotes the domain name of the endpoint just in this article. Remember to replace it with the real domain name when you are going to try it.  
->  
-> **Disclaimer**: This is an experimental project and everything is protected via Cloudflare Access with Origin Pull to ensure that only me and the people I authorized can access the endpoint.
-
 To make our school's internal resources accessible from the internet, I built a reverse proxy to expose everything behind our firewall to the internet.
 
-I used a Raspberry Pi 4 as our gateway benefited by its gigabit LAN controller.
+> **Disclaimer**: This is an experimental project and everything is protected via Cloudflare Access with Origin Pull to ensure that only me and the people I authorized can access the endpoint.
 
 ## How to use it?
-- **Domain Available:** Replace `cqupt.edu.cn` with `endpoint.domain` in the domain part of any URL.
+- **Domain Available:** Replace `cqupt.edu.cn` with `endpoint.domain`[^1] in the domain part of any URL.
 - **IP Only:** Prepend IP address in front of `.endpoint.domain`.
 
 e.g.
@@ -25,14 +21,15 @@ e.g.
 <details>
   <summary><b>Advanced Notices</b></summary>
   <ol>
-    <li>Some destination server requires an TLS connection, and <code>.secure.endpoint.domain</code> is aimed to do that. Otherwise, <code>*.endpoint.domain</code> will initiate a plain HTTP request to the destination.</li>
+    <li>Some destination server requires an TLS connection, and <code>*.secure.endpoint.domain</code> is aimed to do that. Otherwise, <code>*.endpoint.domain</code> will initiate a plain HTTP request to the destination.</li>
     <li>Considering there will be many direct IP forwards, and there is no need to acquire a certificate for them. Thus, any domain access like <code>jwzx.endpoint.domain</code> is provided with a valid wildcard certificate, while IP accesses are not.</li>
-    <li>Destinations with unusual port(other than 80 and 443) are not supported and its link will not be overridden.</li>
+    <li>Destinations with unusual port(other than 80 and 443) are not supported and their link will not be overridden.</li>
   </ol>
 </details>
 
 
 ## Under the hood
+I used a Raspberry Pi 4 as the gateway benefited by its gigabit ethernet controller.
 
 {: .largetype}
 [NGINX Configuration &#x27A1;&#xfe0e;](https://colab.ifengge.cn/snippets/22)
@@ -83,3 +80,5 @@ Then configure `iptables` to filter invalid requests.
 COMMIT
 # Completed on Thu Dec 19 03:26:35 2019
 ```
+
+[^1]: `endpoint.domain` denotes the domain name of the endpoint just in this article. Remember to replace it in the real world.  
