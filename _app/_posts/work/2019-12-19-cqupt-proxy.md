@@ -53,9 +53,10 @@ proxy_redirect		~^https://([0-9.]+)/(.*) http://$1.secure.endpoint.domain/$2;
 Check out [Substitutions | NGINX](https://www.nginx.com/resources/wiki/modules/substitutions/) to find out more.
 
 ```nginx
-subs_filter		'cqupt.edu.cn' endpoint.domain;
-subs_filter		'http://([0-9.]+)/(.*)' http://$1.endpoint.domain/$2 gir;
-subs_filter		'https://([0-9.]+)/(.*)' http://$1.secure.endpoint.domain/$2 gir;
+subs_filter		'http://(.*).cqupt.edu.cn' https://$1.sixsixsix.ml gir;
+subs_filter		'https://(.*).cqupt.edu.cn' https://$1.secure.sixsixsix.ml gir;
+subs_filter		'http://([0-9.]+)' http://$1.sixsixsix.ml gir;
+subs_filter		'https://([0-9.]+)' http://$1.secure.sixsixsix.ml gir;
 ```
 There is no need to match exact IPs since I configured a firewall to prevent malicious requests.
 
