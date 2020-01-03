@@ -43,7 +43,7 @@ You should use a packet capture app like [Fiddler](http://www.telerik.com/fiddle
 
 Then open this HTML file in your browser, you'll find an upload body in Fiddler after uploading a file. 
 
-It is worth noticing that there is a header like ```Content-Type: multipart/form-data; boundary=----WebKitFormBoundarymqPli0Nio8W8mU3Z```, this is an important part when uploading a file. Boundary parameters are used to split files if you upload more than 1 files once. (Like & in GET), and it can be defined as any characters. (According to [html - What is the boundary in multipart/form-data? - Stack Overflow](https://stackoverflow.com/questions/3508338/what-is-the-boundary-in-multipart-form-data))
+It is worth noting that there is a header like ```Content-Type: multipart/form-data; boundary=----WebKitFormBoundarymqPli0Nio8W8mU3Z```, this is an important part when uploading a file. Boundary parameters are used to split files if you upload more than 1 files once. (Like & in GET), and it can be defined as any characters. (According to [html - What is the boundary in multipart/form-data? - Stack Overflow](https://stackoverflow.com/questions/3508338/what-is-the-boundary-in-multipart-form-data))
 
 ## So the format is
 

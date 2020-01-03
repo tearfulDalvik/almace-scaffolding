@@ -12,7 +12,7 @@ CloudFront delivers websites to users from the nearest locations. Meanwhile, it 
 AWS has a service called Lambda which offers a serverless script execution environment. When you bring it to CloudFront, with replication on every edge node, it is called Lambda@Edge. Then you can use a script to amend requests before CloudFront sends it to the original server.
 > Lambda@Edge only supports[^1] `nodejs8.10`, `nodejs10.x`, or `python3.7` even though Go and other languages can be uploaded on the setup page. Besides, Lambda@Edge has only one second of execution time.
   
-To start, given that Lambda@Edge is a form of AWS Lambda, you can use the examples illustrated in [Building Lambda Functions with Python](https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model.html). It is worth noticing that the parameter `event` has a structure defined here: [Lambda@Edge Event Structure](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html).  
+To start, given that Lambda@Edge is a form of AWS Lambda, you can use the examples illustrated in [Building Lambda Functions with Python](https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model.html). It is worth noting that the parameter `event` has a structure defined here: [Lambda@Edge Event Structure](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html).  
 ```python
 def handler(event, context):
     request = event['Records'][0]['cf']['request']
