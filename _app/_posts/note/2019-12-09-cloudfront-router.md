@@ -71,15 +71,15 @@ Once this is deployed you can view logs in the CloudWatch console.
 
 `1ms` for common situations
 
-![5e7bc941389a060b9dd929ece54ba406.png](https://img.ifengge.cn/images/5e7bc941389a060b9dd929ece54ba406.png){: .size-small}  
+![5e7bc941389a060b9dd929ece54ba406.png](https://lwqh4t3.yoooooooo.tk/images/5e7bc941389a060b9dd929ece54ba406.png){: .size-small}  
 
 `800+ms` to update cached origin
 
-![5a80397f4b5bd92b601a27af966771b1.png](https://img.ifengge.cn/images/5a80397f4b5bd92b601a27af966771b1.png){: .size-small}  
+![5a80397f4b5bd92b601a27af966771b1.png](https://lwqh4t3.yoooooooo.tk/images/5a80397f4b5bd92b601a27af966771b1.png){: .size-small}  
 
 `900+ms` when all origins are not reachable(result advocated by watchdog)
 
-![97e6862a1790a859f52349c879cbbbc6.png](https://img.ifengge.cn/images/97e6862a1790a859f52349c879cbbbc6.png){: .size-small}  
+![97e6862a1790a859f52349c879cbbbc6.png](https://lwqh4t3.yoooooooo.tk/images/97e6862a1790a859f52349c879cbbbc6.png){: .size-small}  
 
 
 [^1]: See [Lambda Function Configuration and Execution Environment](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-requirements-lambda-function-configuration)
