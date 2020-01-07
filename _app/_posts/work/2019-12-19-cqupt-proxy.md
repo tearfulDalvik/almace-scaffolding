@@ -4,12 +4,10 @@ title: CQUPT Reverse Proxy
 category: work
 permalink: work/cqupt-rproxy/
 tags: works_community
-link: https://jwzx.endpoint.domain/
 scheme-text: "#3b1599"
 scheme-link: "#ff3f00"
 scheme-hover: "#ff3f00"
 scheme-code: "#d6642a"
-scheme-bg: "#fff"
 ---
 
 To make our school's internal resources accessible from the internet, I built a reverse proxy to expose everything behind our firewall to the internet.
@@ -43,6 +41,7 @@ I used a Raspberry Pi 4 as the gateway benefited by its gigabit ethernet control
 ### Override redirects
 Of domains ending with `cqupt.edu.cn`
 ```nginx
+proxy_redirect 		~^http://cqupt.edu.cn/(.*) https://endpoint.domain/$1;
 proxy_redirect 		~^http://(.*).cqupt.edu.cn/(.*) https://$1.endpoint.domain/$2;
 proxy_redirect		~^https://(.*).cqupt.edu.cn/(.*) https://$1.secure.endpoint.domain/$2;
 ```
@@ -59,6 +58,7 @@ proxy_redirect		~^https://([0-9.]+)/(.*) http://$1.secure.endpoint.domain/$2;
 Check out [Substitutions | NGINX](https://www.nginx.com/resources/wiki/modules/substitutions/) to find out more.
 
 ```nginx
+subs_filter		'http://cqupt.edu.cn' https://endpoint.domain gir;
 subs_filter		'http://(.*).cqupt.edu.cn' https://$1.endpoint.domain gir;
 subs_filter		'https://(.*).cqupt.edu.cn' https://$1.secure.endpoint.domain gir;
 subs_filter		'http://([0-9.]+)' http://$1.endpoint.domain gir;

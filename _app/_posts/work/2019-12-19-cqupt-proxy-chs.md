@@ -1,14 +1,13 @@
 ---
 layout: post
 title: 重庆邮电大学内网外入
-permalink: work/cqupt-rproxy/chs
-link: https://jwzx.endpoint.domain
 category: work/
+permalink: work/cqupt-rproxy/chs/
+link: https://cqupt.tk/
 scheme-text: "#3b1599"
 scheme-link: "#ff3f00"
 scheme-hover: "#ff3f00"
 scheme-code: "#d6642a"
-scheme-bg: "#fff"
 ---
 
 为了让校内的资源能够在校外使用，我搭建了这个内网外入的代理来绕过学校防火墙的限制。
@@ -42,6 +41,7 @@ scheme-bg: "#fff"
 ### 接手重定向
 对于使用 `cqupt.edu.cn` 为结尾的域名：
 ```nginx
+proxy_redirect 		~^http://cqupt.edu.cn/(.*) https://endpoint.domain/$1;
 proxy_redirect 		~^http://(.*).cqupt.edu.cn/(.*) https://$1.endpoint.domain/$2;
 proxy_redirect		~^https://(.*).cqupt.edu.cn/(.*) https://$1.secure.endpoint.domain/$2;
 ```
@@ -57,7 +57,8 @@ proxy_redirect		~^https://([0-9.]+)/(.*) http://$1.secure.endpoint.domain/$2;
 `nginx_substitutions_filter` 是增强版的 `sub_filter`，它可以实现多个正则表达式同时进行替换  
 访问 [Substitutions | NGINX](https://www.nginx.com/resources/wiki/modules/substitutions/) 来查看更多信息。
 
-```nginx
+```ngin
+subs_filter		'http://cqupt.edu.cn' https://endpoint.domain gir;
 subs_filter		'http://(.*).cqupt.edu.cn' https://$1.endpoint.domain gir;
 subs_filter		'https://(.*).cqupt.edu.cn' https://$1.secure.endpoint.domain gir;
 subs_filter		'http://([0-9.]+)' http://$1.endpoint.domain gir;
