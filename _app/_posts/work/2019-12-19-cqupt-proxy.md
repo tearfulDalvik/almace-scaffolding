@@ -14,6 +14,9 @@ To make our school's internal resources accessible from the internet, I built a 
 
 > **Disclaimer**: This is an experimental project and everything is protected via Cloudflare Access with Origin Pull to ensure that only me and the people I authorized can access the endpoint.
 
+![Screenshot](https://lwqh4t3.yoooooooo.tk/images/d1efbd7d30ee3ed76c14986af25f3499.png)
+{: .browser}
+
 ## How to use it?
 - **Domain Available:** Replace `cqupt.edu.cn` with `endpoint.domain`[^1] in the domain part of any URL.
 - **IP Only:** Prepend IP address in front of `.endpoint.domain`.

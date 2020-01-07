@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 重庆邮电大学内网外入
-category: work/
+category: work
 permalink: work/cqupt-rproxy/chs/
 link: https://cqupt.tk/
 scheme-text: "#3b1599"
@@ -13,6 +13,9 @@ scheme-code: "#d6642a"
 为了让校内的资源能够在校外使用，我搭建了这个内网外入的代理来绕过学校防火墙的限制。
 
 > **声明**: 该项目仅用于学习和研究目的，项目中的所有资源都被 Cloudflare Access 和 Origin Pull 保护。
+
+![Screenshot](https://lwqh4t3.yoooooooo.tk/images/d1efbd7d30ee3ed76c14986af25f3499.png)
+{: .browser}
 
 ## 如何使用？
 - **如果有域名：** 将域名中的 `cqupt.edu.cn` 替换为 `endpoint.domain`[^1] 即可。
@@ -38,10 +41,10 @@ scheme-code: "#d6642a"
 {: .largetype}
 [NGINX 配置文件 &#x27A1;&#xfe0e;](https://colab.ifengge.cn/snippets/22)
 
-### 接手重定向
+### 覆盖重定向
 对于使用 `cqupt.edu.cn` 为结尾的域名：
 ```nginx
-proxy_redirect 		~^http://cqupt.edu.cn/(.*) https://endpoint.domain/$1;
+proxy_redirect 		~^https?://cqupt.edu.cn/(.*) https://endpoint.domain/$1;
 proxy_redirect 		~^http://(.*).cqupt.edu.cn/(.*) https://$1.endpoint.domain/$2;
 proxy_redirect		~^https://(.*).cqupt.edu.cn/(.*) https://$1.secure.endpoint.domain/$2;
 ```
@@ -58,7 +61,7 @@ proxy_redirect		~^https://([0-9.]+)/(.*) http://$1.secure.endpoint.domain/$2;
 访问 [Substitutions | NGINX](https://www.nginx.com/resources/wiki/modules/substitutions/) 来查看更多信息。
 
 ```ngin
-subs_filter		'http://cqupt.edu.cn' https://endpoint.domain gir;
+subs_filter		'https?://cqupt.edu.cn' https://endpoint.domain gir;
 subs_filter		'http://(.*).cqupt.edu.cn' https://$1.endpoint.domain gir;
 subs_filter		'https://(.*).cqupt.edu.cn' https://$1.secure.endpoint.domain gir;
 subs_filter		'http://([0-9.]+)' http://$1.endpoint.domain gir;
