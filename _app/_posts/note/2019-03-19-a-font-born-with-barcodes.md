@@ -11,9 +11,9 @@ css: |
   }
 ---
 
-<link href="https://fonts.ifengge.cn/css?family=Libre+Barcode+128+Text" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Libre+Barcode+128+Text" rel="stylesheet">
 
-I've just found a font which born with barcodes, how marvel it is!
+I've just found a font which born with barcodes, how amazing it is!
 
 ## Preview
 <barcode>This is my #1 blog</barcode>

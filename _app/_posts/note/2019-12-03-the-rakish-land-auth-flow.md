@@ -38,8 +38,8 @@ Using a player's UUID as the ```state``` parameter has two advantages. One is th
 ## Receiving tokens
 {:toc #receiving-token}
 When a user authorized from our authorize endpoint, the authorize endpoint will redirect the user to a new URL with authorization code. We'll use this code to exchange tokens from our token endpoint, this is standard.  
-We implemented a simple HTTP server integrated into the plugin jar so as to receive authorization code as the new URL mentioned above after user authorized, and the server will automatically start when Bukkit calls [onEnable()](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/plugin/java/JavaPlugin.html#onEnable--). Then we used NGINX as a reserve proxy to cast ```https://api.ifengge.cn/minecraft/login/``` to this simple server.  
-Then the simple server has authorization code. In other words, our plugin has an authorization code to exchange tokens! Then we'll do it by appending this code to our request to our token endpoint, and if we succeed(User might reject the authorize request, or be blocked during authorize flow), we get both access token and refresh token. 
+We implemented a simple HTTP server integrated into the plugin jar so as to receive authorization code as the new URL mentioned above after user authorized, and the server will automatically start when Bukkit calls [onEnable()](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/plugin/java/JavaPlugin.html#onEnable--). Then we used NGINX as a reverse proxy to cast ```https://api.ifengge.cn/minecraft/login/``` to this simple server.  
+Then the simple server has authorization code. In other words, our plugin has an authorization code to exchange tokens! Then we'll do it by appending this code to our request to our token endpoint, and if we succeed(User might reject the authorize request, or be blocked during the authorize flow), we get both access token and refresh token. 
 
 ##  Verifying user's eligibility
 {:toc #verify-users}
@@ -50,7 +50,7 @@ As mentioned in [Creating an authorization URL](#createing-authorization-url), w
 {:toc #data-synchronizing}
 When a player with refresh token metadata joined this server again, we cannot determine whether this player is eligible immediately, but we would not bother this player until we confirmed that this player's license has expired or revoked.  
 We'll do our reverify process in the background by using the refresh token from this player's metadata to exchange a new pair of a new access token and a new refresh token from the token endpoint, which is standard OAuth2 procedure as well.  
-Then we reperform our request to license API and if legitimate, we'll upload this player's login information. Otherwise, we'll remove this player's refresh token metadata, notify this player and kick this player from the server after 5 minutes, then call our unregister API with player's UUID. If this player rejoins again, he will be asked for authenticating just like a new player, except that all this player’s property remains.
+Then we reperform our request to license API and if legitimate, we'll upload this player's new login information. Otherwise, we'll remove this player's refresh token metadata, notify this player and kick this player from the server after 5 minutes, then call our unregister API with player's UUID. If this player rejoins again, he will be asked for authorization just like a new player, except that all this player’s property remains.
 
 [^1]: Metadata are not persistent. None of them will exist after server restarts.
 [^2]: We moved Minecraft and go.ifengge.cn server under the same LAN eventually, then we did some trick on the link shorten API to reuse identical links. This did reduce many response time.
