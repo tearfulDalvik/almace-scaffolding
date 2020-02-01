@@ -7,11 +7,7 @@ tags: notes
 last-modified: 2017112423
 ---
 
-If you don't like adding an external library to your project just for a single feature, you'd most like to implement it yourself.
-
-#### How uploads work
-
-The best way to learn about network protocols is by ***Packet Capture***, So let us create a file named ```upload.html```：
+Firstly create a file named ```upload.html```：
 ```html
 <html>
     <body>
