@@ -4,10 +4,6 @@ title: CQUPT Reverse Proxy
 category: work
 permalink: work/cqupt-rproxy/
 tags: works_community
-scheme-text: "#3b1599"
-scheme-link: "#ff3f00"
-scheme-hover: "#ff3f00"
-scheme-code: "#d6642a"
 ---
 
 To make our school's internal resources accessible from the internet, I built a reverse proxy to expose everything behind our firewall to the internet.

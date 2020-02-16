@@ -3,7 +3,7 @@ layout: post
 title: TOEFL Seat Availability Checker
 category: work
 permalink: work/toefl-seat-availability-checker/
-tags: works_community
+tags: works_personal
 ---
 
 ## Intro

@@ -4,10 +4,6 @@ title: 重庆邮电大学内网外入
 category: work
 permalink: work/cqupt-rproxy/chs/
 link: https://cqupt.tk/
-scheme-text: "#3b1599"
-scheme-link: "#ff3f00"
-scheme-hover: "#ff3f00"
-scheme-code: "#d6642a"
 ---
 
 为了让校内的资源能够在校外使用，我搭建了这个内网外入的代理来绕过学校防火墙的限制。
