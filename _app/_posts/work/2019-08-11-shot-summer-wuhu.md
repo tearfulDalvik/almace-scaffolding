@@ -17,11 +17,11 @@ tags: works_photo
 ---
 
 ## Wuhu, Anhui • China (2019 Summer)
-[View at Dalvik's Gallery](https://img.ifengge.cn/album/gJg)
+[View in Dalvik's Gallery](https://img.ifengge.cn/album/gJg)
 {: .largetype}
 
 ## Zhenjiang, Jiangsu • China 
 Zhenjiang is an exceptionally meaningful city to me, so I would rather keep those original files. Besides, most of them are taken just at will from my iPhone.  
 
-[View at Dalvik's Gallery](https://img.ifengge.cn/album/7da)
+[View in Dalvik's Gallery](https://img.ifengge.cn/album/7da)
 {: .largetype}
