@@ -18,11 +18,11 @@ css: |
   .media-links li.twitter a {
     width: 35px;
     height: 29px;
-    background-image: url('https://s1.yoooooooo.tk/cdn/img/about/twitter.svg');
+    background-image: url('https://accelerate.akacdn.app/cdn/img/about/twitter.svg');
   }
   
   .media-links li.twitter:hover a {
-    background-image: url('https://s1.yoooooooo.tk/cdn/img/about/twitter-hover.svg');
+    background-image: url('https://accelerate.akacdn.app/cdn/img/about/twitter-hover.svg');
   }
   
   .media-links li.github {
@@ -32,11 +32,11 @@ css: |
   .media-links li.github a {
     width: 29px;
     height: 35px;
-    background-image: url('https://s1.yoooooooo.tk/cdn/img/about/github.svg');
+    background-image: url('https://accelerate.akacdn.app/cdn/img/about/github.svg');
   }
   
   .media-links li.github:hover a {
-    background-image: url('https://s1.yoooooooo.tk/cdn/img/about/github-hover.svg');
+    background-image: url('https://accelerate.akacdn.app/cdn/img/about/github-hover.svg');
   }
   
   .media-links li.flickr {

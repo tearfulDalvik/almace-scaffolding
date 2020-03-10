@@ -3,7 +3,7 @@ layout: post
 title: RIME - An Intelligent ChsIME
 category: note
 permalink: note/introducing-rime/
-heading-bg: https://s1.yoooooooo.tk/cdn/img/home-watermarks.svg
+heading-bg: https://accelerate.akacdn.app/cdn/img/home-watermarks.svg
 heading-bg-color: "#171a1f"
 heading-bg-text: "#fff"
 scheme-bg: "#171a1f"
