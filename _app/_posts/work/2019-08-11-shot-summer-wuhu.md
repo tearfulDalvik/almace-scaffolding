@@ -3,7 +3,7 @@ layout: post
 title: Shots on Travel
 category: work
 permalink: work/travel-shots/
-heading-bg: https://lwqh4t3.yoooooooo.tk/images/460d3dff1af81e3bcf87f79327c75479.jpg
+heading-bg: https://img.akacdn.app/images/460d3dff1af81e3bcf87f79327c75479.jpg
 heading-bg-local: false
 heading-bg-color: "#00433a"
 heading-bg-position: "center bottom"

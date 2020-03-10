@@ -6,7 +6,7 @@ desc: 關於我・私について・Introduction
 css: |
   @media (min-width: 640px) {
     .content header {
-        background: url(https://lwqh4t3.yoooooooo.tk/images/41a9b5d65a595b6ce79ce16afad91270.png) no-repeat;
+        background: url(https://img.akacdn.app/images/41a9b5d65a595b6ce79ce16afad91270.png) no-repeat;
         background-position: 95% center;
     }
   }
