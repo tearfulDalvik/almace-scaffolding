@@ -100,5 +100,9 @@ Some browsers support HLS natively, while some are not. However, we can always u
 
 To provide danmaku support, you have to implement a websocket server.
 
+## About Playstations
+I'm using a USG as my gateway. The `gateway.config.json` solution from ubnt is somewhat complicated.
+I managed to do it by directly casting `live-*.twitch.tv` from DNS to my rtmp server.
+
 [^1]: See the whitepaper here: [rtmp_specification_1.0.pdf](https://wwwimages2.adobe.com/content/dam/acom/en/devnet/rtmp/pdf/rtmp_specification_1.0.pdf)
 [^2]: [RFC 8216 - HTTP Live Streaming](https://tools.ietf.org/html/rfc8216)
