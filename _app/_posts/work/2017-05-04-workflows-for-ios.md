@@ -18,7 +18,7 @@ last-modified: 201711242329
 
 截图：
 
-![IMG_0057.jpg](https://img.akacdn.app/images/2017/05/04/IMG_0057.jpg)
+![IMG_0057.jpg](https://img.akacdn.app/2017/05/04/IMG_0057.jpg)
 
 
 ## 删除最后截图
@@ -26,4 +26,4 @@ last-modified: 201711242329
 
 一键删除最后一张截图，适合发给朋友了就跑的人（逃
 
-![IMG_0060.png](https://img.akacdn.app/images/2017/05/04/IMG_0060.png)
+![IMG_0060.png](https://img.akacdn.app/2017/05/04/IMG_0060.png)
