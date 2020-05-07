@@ -26,7 +26,7 @@ Benefited by integrating the schedule into the iOS calendar, I found there are m
 - It is separated from other schedules, therefore you can control the visibility of class schedules in your calendar. Additionally, you can retrieve schedules using [```EKEventStore.calendar(withIdentifier:)```](https://developer.apple.com/documentation/eventkit/ekeventstore) if you are going to develop your own app.
 
 ## Usage
-[View on Dalvik's API Docs](https://docs.ifengge.cn/display/apis/CQUPT+APIs)
+[View on Dalvik's API Docs](https://docs.ifengge.cn/display/site/CQUPT+APIs)
 {: .largetype}
 
 [^1]: [iCalendar - Wikipedia](https://en.wikipedia.org/wiki/ICalendar)
