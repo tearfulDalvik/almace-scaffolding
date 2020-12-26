@@ -66,9 +66,6 @@ jobs:
         SOURCE: ./_site/
         TARGET: ''
         WITH_DELETE: true
-        WITH_CLOUD_FRONT_INVALIDATION: false
-        AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-        AWS_CLOUDFRONT_INVALIDATION_PATH: "\"/*\""
     - name: invalidate
       uses: chetan/invalidate-cloudfront-action@master
       env:
