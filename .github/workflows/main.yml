@@ -64,7 +64,7 @@ jobs:
       uses: raulanatol/aws-s3-docker-action@master
       env:
         SOURCE: ./_site/
-        TARGET: /
+        TARGET: ''
         WITH_DELETE: true
-        WITH_CLOUD_FRONT_INVALIDATION: / *
+        WITH_CLOUD_FRONT_INVALIDATION: *
         AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
