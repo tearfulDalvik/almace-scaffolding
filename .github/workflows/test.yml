@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         ruby-version: [2.7]
-        node-version: [13]
+        node-version: [15]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby ${{ matrix.ruby-version }}
@@ -56,7 +56,7 @@ jobs:
     - name: Build AMSF
       run: grunt build
     - name: Run Percy
-      uses: percy/snapshot-action@v0.1.1
+      uses: percy/snapshot-action@v0.1.2
       with:
         build-directory: "_site"
       env:
