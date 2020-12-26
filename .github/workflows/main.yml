@@ -66,5 +66,5 @@ jobs:
         SOURCE: ./_site/
         TARGET: ''
         WITH_DELETE: true
-        WITH_CLOUD_FRONT_INVALIDATION: *
+        WITH_CLOUD_FRONT_INVALIDATION: '*'
         AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
