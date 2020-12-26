@@ -49,22 +49,8 @@ css: |
 
 ## Contact
 
-- keybase: [@dalvik](https://keybase.io/dalvik/)
 - telegram: [@GTX108O](https://t.me/GTX108O)
-- email: [meizaizheli@ifengge.cn](mailto:t@ifengge.cn)
-- twitter: [@tearfulDalvik](https://twitter.com/tearfulDalvik)
-- github: [@tearfulDalvik](https://github.com/tearfulDalvik)
-
-## Donate
-
-[Buy me a cup of coffee](https://donate.ifengge.cn/)
-{: .largetype}
-
-## (･ิω･ิ)
-
-I have an immature suggestion: Follow me 😳  
-Come to Steam and have fun with me, [Steam Community :: tearfulDalvik](http://steamcommunity.com/id/tearfuldalvik)  
-You can leave an anonymous message to me incognito at [sarahah.com](https://tearfulDalvik.sarahah.com)
+- email: [meizaizheli@ifengge.cn](mailto:meizaizheli@ifengge.cn)
 
 ## Colophon
 <p>那天气总是阴沉的，如铁石心肠
@@ -76,6 +62,5 @@ You can leave an anonymous message to me incognito at [sarahah.com](https://tear
 <small>Granted by <b>黄克思</b></small>
 </p>
 <p><a href="https://sparanoid.com/lab/amsf/"><abbr title="Almace Scaffolding">AMSF</abbr></a> (<a href="https://github.com/sparanoid/sparanoid.com">Source</a>) - <a href="https://github.com/">GitHub</a> - <a href="https://aws.amazon.com/cloudfront/">CloudFront</a> - <a href="https://neovim.io/">NeoVim</a></p>
-<a href="https://www.vultr.com/?ref=7021079-3B"><img src="https://www.vultr.com/media/icon_onwhite.svg" style="width: 10vw;margin:0 !important;"></a>
 
 All posts are © Gufeng Shen, all rights reserved.

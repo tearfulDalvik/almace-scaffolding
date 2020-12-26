@@ -16,12 +16,14 @@ scheme-text: "#aaa"
 tags: works_photo
 ---
 
-## Wuhu, Anhui • China (2019 Summer)
-[View in Dalvik's Gallery](https://img.ifengge.cn/album/gJg)
+## Wuhu, Anhui • China
+[View in Gallery](https://img.ifengge.cn/album/gJg)
 {: .largetype}
 
 ## Zhenjiang, Jiangsu • China 
-Zhenjiang is an exceptionally meaningful city to me, so I would rather keep those original files. Besides, most of them are taken just at will from my iPhone.  
+[View in Gallery](https://img.ifengge.cn/album/7da)
+{: .largetype}
 
-[View in Dalvik's Gallery](https://img.ifengge.cn/album/7da)
+## Changsha, Hunan • China 
+[View in Gallery](https://img.ifengge.cn/album/izS)
 {: .largetype}
