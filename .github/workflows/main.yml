@@ -9,9 +9,9 @@ name: S3 Deploy
 
 on:
   push:
-    branches: [ master ]
+    branches: [ blog ]
   pull_request:
-    branches: [ master ]
+    branches: [ blog ]
 
 jobs:
   build-n-deploy:
