@@ -19,7 +19,8 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }} 
+      AWS_BUCKET_NAME: ${{ secrets.S3_BUCKET }}
     strategy:
       matrix:
         ruby-version: [2.7]
@@ -59,9 +60,11 @@ jobs:
       run: yarn --frozen-lockfile
     - name: Build AMSF
       run: grunt build
-    - uses: lbertenasco/s3-deploy@v1
-      with:
-        folder: ./_site/**
-        bucket: ${{ secrets.S3_BUCKET }}
-        dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-        invalidation: / *
+    - name: Sync to S3
+      uses: raulanatol/aws-s3-docker-action@master
+      env:
+        SOURCE: ./_site/
+        TARGET: /
+        WITH_DELETE: true
+        WITH_CLOUD_FRONT_INVALIDATION: / *
+        AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
