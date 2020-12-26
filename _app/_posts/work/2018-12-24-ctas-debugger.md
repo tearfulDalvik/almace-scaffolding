@@ -11,9 +11,9 @@ A Debug Tool for [CTAS Student System](http://172.20.2.205.cqu.pt/ctas/). This t
 
 ### License
 
-This program is made by [Dalvik Shen](https://ifengge.me/about/). All rights reserved and commercial use is prohibited. 
+This program is made by [Gufeng Shen](https://gufeng.sh/about/). All rights reserved and commercial use is prohibited. 
 
-This program is a crack of the CTAS Student System. As such, it is not subject to university regulations or local law. Use at your own risk.
+This program is a crack of the CTAS Student System(internal-use only). As such, it is not subject to university regulations. Use at your own risk.
 
 ## Features
 

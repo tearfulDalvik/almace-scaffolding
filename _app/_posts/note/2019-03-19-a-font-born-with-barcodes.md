@@ -13,11 +13,9 @@ css: |
 
 <link href="https://fonts.googleapis.com/css?family=Libre+Barcode+128+Text" rel="stylesheet">
 
-I've just found a font which born with barcodes, how amazing it is!
-
 ## Preview
 <barcode>This is my #1 blog</barcode>
 
 ## Intro
-This is a font family named ```Libre Barcode```.  
-You can find it on [Google Fonts](https://fonts.google.com/?query=Libre+Barcode).
+This font family is named ```Libre Barcode```.  
+Find it on [Google Fonts](https://fonts.google.com/?query=Libre+Barcode).

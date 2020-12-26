@@ -1,6 +1,6 @@
 ---
 layout: post
-title: RIME - An Intelligent ChsIME
+title: RIME - An Intelligent Multi-Language IME
 category: note
 permalink: note/introducing-rime/
 heading-bg: https://accelerate.akacdn.app/cdn/img/home-watermarks.svg
@@ -48,7 +48,7 @@ Defaultly, to reach out this menu you just need to press ``` Control(⌃) + ` ``
 
 This menu provides several options to change input maneuver, which provides flavored input methods and different language supports. In the submenu of each engine, its option can be fully customized.
 
-This menu can switch between Chinese and English (Of course it can also be done by just pressing ⇧), full or half-width for symbols, suggest Emojis by words or not and even encodings!
+This menu can switch between languages, full or half-width for symbols, suggest Emojis by words or not and even encodings!
 
 After a configuration file has been changed, press ``` ⌃ + ⌥ + ` ``` to take effects.
 

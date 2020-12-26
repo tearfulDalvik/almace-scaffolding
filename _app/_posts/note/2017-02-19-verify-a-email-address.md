@@ -7,7 +7,7 @@ tags: notes
 last-modified: 201712071140
 ---
 
-> 哈哈哈哈真是涨姿势了，我只是做下搬运，可以点击查看 [原文](https://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx/)
+> 点击查看 [原文](https://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx/)
 
 ## E-Mail 地址还可以是这些？？
 - Abc\@def@example.com
@@ -20,8 +20,7 @@ last-modified: 201712071140
 - !def!xyz%abc@example.com
 - _somename@example.com
 
-## 作为程序员，我们应该如何写正则
-还是有闲不住的人把它弄出来了：
+## 如何写正则
 
 ```java
 public void EmailTests(string email, bool expected)
@@ -63,5 +62,3 @@ public void EmailTests(string email, bool expected)
 [Row(@"""Ima Fool""@example.com", true)]
 [Row(@"Ima Fool@example.com", false)]
 ```
-
-厉害了我的哥
