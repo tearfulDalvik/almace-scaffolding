@@ -61,7 +61,7 @@ jobs:
       run: grunt build
     - uses: lbertenasco/s3-deploy@v1
       with:
-        folder: _site
+        folder: ./_site/**
         bucket: ${{ secrets.S3_BUCKET }}
         dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         invalidation: / *
