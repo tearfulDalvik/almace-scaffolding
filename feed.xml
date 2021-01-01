@@ -1,0 +1,1294 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title>Gufeng Shen</title><subtitle>Gufeng's Blog</subtitle><updated>2021-01-01T17:36:08+08:00</updated><id>https://gufeng.sh/</id><generator uri="https://sparanoid.com/lab/amsf/" version="2.0.19">Almace Scaffolding</generator><link rel="alternate" type="text/html" hreflang="en" href="https://gufeng.sh/" /><link rel="self" type="application/atom+xml" href="https://gufeng.sh/feed.xml" /><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><entry><title>Compiling SQLCipher on Windows and Linux</title><id>https://gufeng.sh/note/compiling-sqlcipher/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/compiling-sqlcipher/" /><published>2020-12-30T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;Zetetic does not provide a dynamic library installer for users. Therefore, a static library is a great choice to deliver.&lt;/p&gt;
+
+&lt;h2 id=&quot;windows&quot;&gt;Windows&lt;/h2&gt;
+&lt;p&gt;OpenSSL headers are required. You can install it via the C++ Library Manager from Microsoft: &lt;a href=&quot;https://github.com/microsoft/vcpkg&quot;&gt;vcpkg&lt;/a&gt;.  vcpkg could be installed anywhere.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;PS&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;\vcpkg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;openssl:x64-windows-static&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PS&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;\vcpkg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;openssl:x86-windows-static&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The most convenient way to let the SQLCipher compiler find these headers is to move vcpkg’s openssl install dir to the root of SQLCipher.&lt;/p&gt;
+
+&lt;p&gt;Now open Makefile.msc in a text editor and replace the lines:&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Flags controlling use of the in memory btree implementation
+#
+# SQLITE_TEMP_STORE is 0 to force temporary tables to be in a file, 1 to
+# default to file, 2 to default to memory, and 3 to force temporary
+# tables to always be in memory.
+#
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(TCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-DSQLITE_TEMP_STORE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+&lt;span class=&quot;nv&quot;&gt;RCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(RCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-DSQLITE_TEMP_STORE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;by the following:&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Flags controlling use of the in memory btree implementation
+#
+# SQLITE_TEMP_STORE is 0 to force temporary tables to be in a file, 1 to
+# default to file, 2 to default to memory, and 3 to force temporary
+# tables to always be in memory.
+#
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(TCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-DSQLITE_TEMP_STORE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2
+&lt;span class=&quot;nv&quot;&gt;RCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(RCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-DSQLITE_TEMP_STORE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2
+
+&lt;span class=&quot;nv&quot;&gt;TCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(TCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-DSQLITE_HAS_CODEC&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;RCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(RCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-DSQLITE_HAS_CODEC&lt;/span&gt;
+
+&lt;span class=&quot;err&quot;&gt;!IF&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;$(PLATFORM)&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;x64&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;TCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(TCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-I&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;openssl-windows_x64-windows-static&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\i&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;nclude&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;RCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(RCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-I&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;openssl-windows_x64-windows-static&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\i&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;nclude&quot;&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;!ELSEIF&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;$(PLATFORM)&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;x86&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;TCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(TCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-I&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;openssl-windows_x86-windows-static&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\i&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;nclude&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;RCC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(RCC)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-I&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;openssl-windows_x86-windows-static&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\i&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;nclude&quot;&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;!ENDIF&lt;/span&gt;
+
+&lt;span class=&quot;err&quot;&gt;!IF&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;$(PLATFORM)&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;x64&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;LTLIBPATHS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(LTLIBPATHS)&lt;/span&gt; /LIBPATH:&lt;span class=&quot;s2&quot;&gt;&quot;openssl-windows_x64-windows-static&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\l&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ib&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;LTLIBS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(LTLIBS)&lt;/span&gt; libcrypto.lib libssl.lib
+&lt;span class=&quot;err&quot;&gt;!ELSEIF&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;$(PLATFORM)&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;x86&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;LTLIBPATHS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(LTLIBPATHS)&lt;/span&gt; /LIBPATH:&lt;span class=&quot;s2&quot;&gt;&quot;openssl-windows_x86-windows-static&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\l&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ib&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;LTLIBS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(LTLIBS)&lt;/span&gt; libcrypto32.lib libssl32.lib
+&lt;span class=&quot;err&quot;&gt;!ENDIF&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# for OpenSSL: https://github.com/openssl/openssl/blob/3d362f190306b62a17aa2fd475b2bc8b3faa8142/NOTES.WIN#L112
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LTLIBS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$(LTLIBS)&lt;/span&gt; WS2_32.Lib Gdi32.Lib AdvAPI32.Lib Crypt32.Lib User32.Lib
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Finally, run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmake /f Makefile.msc&lt;/code&gt; command, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sqlcipher.dll&lt;/code&gt; will be generated.&lt;/p&gt;
+
+&lt;h2 id=&quot;linux&quot;&gt;Linux&lt;/h2&gt;
+&lt;p&gt;Make sure OpenSSL headers are installed on your workstation. Using package managers is a great choice.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;SQLITE_HAS_CODEC
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SQLITE_TEMP_STORE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2
+
+./configure &lt;span class=&quot;nt&quot;&gt;--enable-tempstore&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LDFLAGS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-lcrypto&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Then, call the make tool&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;make
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;libsqlite3.so&lt;/code&gt; (instead of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;libsqlcipher.so&lt;/code&gt;) will be generated.&lt;/p&gt;
+
+&lt;p&gt;Compiling on macOS seems to follow the same routine save that a .dylib file substitutes the .so file.&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>Zetetic does not provide a dynamic library installer for users. Therefore, a static library is a great choice to deliver.WindowsOpenSSL headers are required. You can install it via the C++ Library Manager from Microsoft: vcpkg.  vcpkg could be installed anywhere.PS&amp;gt; .\vcpkg install openssl:x64-windows-staticPS&amp;gt; .\vcpkg install openssl:x86-windows-staticThe most convenient way to let the SQLCipher compiler find these headers is to move vcpkg’s openssl install dir to the root of SQLCipher.Now open Makefile.msc in a text editor and replace the lines:# Flags controlling use of the in memory btree implementation## SQLITE_TEMP_STORE is 0 to force temporary tables to be in a file, 1 to# default to file, 2 to default to memory, and 3 to force temporary# tables to always be in memory.#TCC = $(TCC) -DSQLITE_TEMP_STORE=1RCC = $(RCC) -DSQLITE_TEMP_STORE=1by the following:# Flags controlling use of the in memory btree implementation## SQLITE_TEMP_STORE is 0 to force temporary tables to be in a file, 1 to# default to file, 2 to default to memory, and 3 to force temporary# tables to always be in memory.#TCC = $(TCC) -DSQLITE_TEMP_STORE=2RCC = $(RCC) -DSQLITE_TEMP_STORE=2TCC = $(TCC) -DSQLITE_HAS_CODECRCC = $(RCC) -DSQLITE_HAS_CODEC!IF &quot;$(PLATFORM)&quot;==&quot;x64&quot;TCC = $(TCC) -I&quot;openssl-windows_x64-windows-static\include&quot;RCC = $(RCC) -I&quot;openssl-windows_x64-windows-static\include&quot;!ELSEIF &quot;$(PLATFORM)&quot;==&quot;x86&quot;TCC = $(TCC) -I&quot;openssl-windows_x86-windows-static\include&quot;RCC = $(RCC) -I&quot;openssl-windows_x86-windows-static\include&quot;!ENDIF!IF &quot;$(PLATFORM)&quot;==&quot;x64&quot;LTLIBPATHS = $(LTLIBPATHS) /LIBPATH:&quot;openssl-windows_x64-windows-static\lib&quot;LTLIBS = $(LTLIBS) libcrypto.lib libssl.lib!ELSEIF &quot;$(PLATFORM)&quot;==&quot;x86&quot;LTLIBPATHS = $(LTLIBPATHS) /LIBPATH:&quot;openssl-windows_x86-windows-static\lib&quot;LTLIBS = $(LTLIBS) libcrypto32.lib libssl32.lib!ENDIF# for OpenSSL: https://github.com/openssl/openssl/blob/3d362f190306b62a17aa2fd475b2bc8b3faa8142/NOTES.WIN#L112LTLIBS = $(LTLIBS) WS2_32.Lib Gdi32.Lib AdvAPI32.Lib Crypt32.Lib User32.LibFinally, run nmake /f Makefile.msc command, and sqlcipher.dll will be generated.LinuxMake sure OpenSSL headers are installed on your workstation. Using package managers is a great choice.export SQLITE_HAS_CODECexport SQLITE_TEMP_STORE=2./configure --enable-tempstore=yes LDFLAGS=&quot;-lcrypto&quot;Then, call the make toolmakelibsqlite3.so (instead of libsqlcipher.so) will be generated.Compiling on macOS seems to follow the same routine save that a .dylib file substitutes the .so file.</summary></entry><entry><title>Build your own live network!</title><id>https://gufeng.sh/note/live-network/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/live-network/" /><published>2020-03-12T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;h2 id=&quot;under-the-hood&quot;&gt;Under the hood&lt;/h2&gt;
+&lt;p&gt;When you clicked the start button to push your stream from streaming software like OBS, XSplit Broadcaster, they push your screen generally via RTMP&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; to the server.&lt;/p&gt;
+
+&lt;p&gt;Since we cannot play RTMP stream directly via video tag in HTML5, what we are going to do is to save every video fragment from RTMP stream and generate an HLS&lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; playlist. There will be many &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ts&lt;/code&gt; files containing every fragment of videos and a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.m3u8&lt;/code&gt; file revealing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ts&lt;/code&gt; files to be played in the future.&lt;/p&gt;
+
+&lt;p&gt;To deliver these ts and m3u8 files, we can use simple HTTP.&lt;/p&gt;
+
+&lt;p&gt;Now the structure is pretty simple:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;OBS&lt;/td&gt;
+      &lt;td&gt;— RTMP —&amp;gt;&lt;/td&gt;
+      &lt;td&gt;Server&lt;/td&gt;
+      &lt;td&gt;— HTTP —&amp;gt;&lt;/td&gt;
+      &lt;td&gt;Browsers&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;nginx-with-rtmp-support&quot;&gt;Nginx with RTMP support&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/arut/nginx-rtmp-module&quot;&gt;nginx-rtmp-module&lt;/a&gt;&lt;/strong&gt; is an Nginx module that provides RTMP support to Nginx.&lt;/p&gt;
+
+&lt;p&gt;We can compile an Nginx module via this:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./configure &lt;span class=&quot;nt&quot;&gt;--add-dynamic-module&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/path/to/nginx-rtmp-module
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After loading the module, we can work with Nginx config. Here is an example:&lt;/p&gt;
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;rtmp&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kn&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1935&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kn&quot;&gt;chunk_size&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kn&quot;&gt;buflen&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;500ms&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        
+        &lt;span class=&quot;kn&quot;&gt;application&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;live&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;live&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;allow&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;play&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.20.0.0/16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;deny&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;play&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;kn&quot;&gt;on_publish&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://live-control.ifengge.cn:80/publish/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;on_publish_done&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://live-control.ifengge.cn:80/done/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;kn&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;record_path&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/path/to/live/rec/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;kn&quot;&gt;hls&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;hls_path&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/path/to/live/streams/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;kn&quot;&gt;hls_fragment&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;hls_playlist_length&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;kn&quot;&gt;hls_nested&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;hls_fragment_naming&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;With the stream key, the final URL will be like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rtmp://ip:1935/live/key&lt;/code&gt; (e.g., put &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rtmp://ip:1935/live&lt;/code&gt; in the server field, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;key&lt;/code&gt; in the key field in XSplit), and it will be validated by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;on_publish&lt;/code&gt; directive, see the module docs to find out.&lt;/p&gt;
+
+&lt;p&gt;After we clicked the push button, we can immediately see several &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ts&lt;/code&gt; files and an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;index.m3u8&lt;/code&gt; file in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/path/to/live/streams/key&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;⚠️ The playlist file is changing every time, therefore it cannot be cached.&lt;/p&gt;
+
+&lt;h2 id=&quot;serve-contents&quot;&gt;Serve contents&lt;/h2&gt;
+&lt;p&gt;Create a host to this streaming folder like this:&lt;/p&gt;
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kn&quot;&gt;include&lt;/span&gt;  &lt;span class=&quot;nc&quot;&gt;confincludes/conf&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;/listen.https.conf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kn&quot;&gt;server_name&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;live-content.example.com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;^/streams/(\w+/\w+\.m3u8)$&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;alias&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/path/to/live/streams/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Access-Control-Allow-Origin&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'https://live.ifengge.cn'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Access-Control-Allow-Methods&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'GET,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;OPTIONS'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;kn&quot;&gt;expires&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;^/streams/(\w+/\w+\.ts)$&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;alias&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/path/to/live/streams/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Access-Control-Allow-Origin&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'https://live.ifengge.cn'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Access-Control-Allow-Methods&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'GET,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;OPTIONS'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;kn&quot;&gt;expires&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;^/rec/(\w+\.flv)$&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;alias&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/path/to/live/rec/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Access-Control-Allow-Origin&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'https://live.ifengge.cn'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;kn&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Access-Control-Allow-Methods&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'GET,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;OPTIONS'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;kn&quot;&gt;expires&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;webplayer-and-danmaku&quot;&gt;Webplayer and Danmaku&lt;/h2&gt;
+&lt;p&gt;Some browsers support HLS natively, while some are not. However, we can always use &lt;a href=&quot;https://github.com/video-dev/hls.js/&quot;&gt;hls.js&lt;/a&gt; to tackle this.&lt;/p&gt;
+
+&lt;p&gt;To provide danmaku support, you have to implement a websocket server.&lt;/p&gt;
+
+&lt;h2 id=&quot;about-playstations&quot;&gt;About Playstations&lt;/h2&gt;
+&lt;p&gt;I’m using a USG as my gateway. The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gateway.config.json&lt;/code&gt; solution from ubnt is somewhat complicated.
+I managed to do it by directly casting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;live-*.twitch.tv&lt;/code&gt; from DNS to my rtmp server.&lt;/p&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;See the whitepaper here: &lt;a href=&quot;https://wwwimages2.adobe.com/content/dam/acom/en/devnet/rtmp/pdf/rtmp_specification_1.0.pdf&quot;&gt;rtmp_specification_1.0.pdf&lt;/a&gt; &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc8216&quot;&gt;RFC 8216 - HTTP Live Streaming&lt;/a&gt; &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>Under the hoodWhen you clicked the start button to push your stream from streaming software like OBS, XSplit Broadcaster, they push your screen generally via RTMP1 to the server.Since we cannot play RTMP stream directly via video tag in HTML5, what we are going to do is to save every video fragment from RTMP stream and generate an HLS2 playlist. There will be many .ts files containing every fragment of videos and a .m3u8 file revealing ts files to be played in the future.To deliver these ts and m3u8 files, we can use simple HTTP.Now the structure is pretty simple:            OBS      — RTMP —&amp;gt;      Server      — HTTP —&amp;gt;      Browsers      Nginx with RTMP supportnginx-rtmp-module is an Nginx module that provides RTMP support to Nginx.We can compile an Nginx module via this:./configure --add-dynamic-module=/path/to/nginx-rtmp-moduleAfter loading the module, we can work with Nginx config. Here is an example:rtmp {    server {        listen 1935;        chunk_size 4000;        buflen 500ms;                application live {                live on;                allow play 10.20.0.0/16;                deny play all;                on_publish http://live-control.ifengge.cn:80/publish/;                on_publish_done http://live-control.ifengge.cn:80/done/;                record all;                record_path /path/to/live/rec/;                hls on;                hls_path /path/to/live/streams/;                hls_fragment 1;                hls_playlist_length 10;                hls_nested on;                hls_fragment_naming system;        }  }}With the stream key, the final URL will be like rtmp://ip:1935/live/key (e.g., put rtmp://ip:1935/live in the server field, and key in the key field in XSplit), and it will be validated by on_publish directive, see the module docs to find out.After we clicked the push button, we can immediately see several .ts files and an index.m3u8 file in /path/to/live/streams/key.⚠️ The playlist file is changing every time, therefore it cannot be cached.Serve contentsCreate a host to this streaming folder like this:server {        include  confincludes/conf/listen.https.conf;        server_name  live-content.example.com;        location ~ ^/streams/(\w+/\w+\.m3u8)$ {                alias /path/to/live/streams/$1;                add_header Access-Control-Allow-Origin 'https://live.ifengge.cn';                add_header Access-Control-Allow-Methods 'GET, OPTIONS';                expires -1;        }        location ~ ^/streams/(\w+/\w+\.ts)$ {                alias /path/to/live/streams/$1;                add_header Access-Control-Allow-Origin 'https://live.ifengge.cn';                add_header Access-Control-Allow-Methods 'GET, OPTIONS';                expires max;        }        location ~ ^/rec/(\w+\.flv)$ {                alias /path/to/live/rec/$1;                add_header Access-Control-Allow-Origin 'https://live.ifengge.cn';                add_header Access-Control-Allow-Methods 'GET, OPTIONS';                expires max;        }}Webplayer and DanmakuSome browsers support HLS natively, while some are not. However, we can always use hls.js to tackle this.To provide danmaku support, you have to implement a websocket server.About PlaystationsI’m using a USG as my gateway. The gateway.config.json solution from ubnt is somewhat complicated.I managed to do it by directly casting live-*.twitch.tv from DNS to my rtmp server.            See the whitepaper here: rtmp_specification_1.0.pdf &amp;#8617;&amp;#xfe0e;              RFC 8216 - HTTP Live Streaming &amp;#8617;&amp;#xfe0e;      </summary></entry><entry><title>TOEFL Seat Availability Checker</title><id>https://gufeng.sh/work/toefl-seat-availability-checker/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/toefl-seat-availability-checker/" /><published>2020-02-16T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;Get all seat availability for current TOEFL schedule in China.&lt;/p&gt;
+
+&lt;h2 id=&quot;downloads&quot;&gt;Downloads&lt;/h2&gt;
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;https://chrome.google.com/webstore/detail/eaionkhblciebfcdjnpjefjhfmcohhhh&quot;&gt;Add to Chrome&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;love-this&quot;&gt;Love this?&lt;/h2&gt;
+&lt;p&gt;Please consider &lt;a href=&quot;//donate.ifengge.cn/&quot;&gt;buying me a cup of coffee&lt;/a&gt;&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>IntroGet all seat availability for current TOEFL schedule in China.DownloadsAdd to ChromeLove this?Please consider buying me a cup of coffee</summary></entry><entry><title>CQUPT Reverse Proxy</title><id>https://gufeng.sh/work/cqupt-rproxy/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/cqupt-rproxy/" /><published>2019-12-19T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;To make our school’s internal resources accessible from the internet, I built a reverse proxy to expose everything behind our firewall to the internet.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Disclaimer&lt;/strong&gt;: This is an experimental project and everything is protected via Cloudflare Access with Origin Pull to ensure that only me and the people I authorized can access the endpoint.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p class=&quot;browser&quot;&gt;&lt;img src=&quot;https://img.akacdn.app/d1efbd7d30ee3ed76c14986af25f3499.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-use-it&quot;&gt;How to use it?&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Domain Available:&lt;/strong&gt; Replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cqupt.edu.cn&lt;/code&gt; with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;endpoint.domain&lt;/code&gt;&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; in the domain part of any URL.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;IP Only:&lt;/strong&gt; Prepend IP address in front of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.endpoint.domain&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;e.g.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;If you want to visit &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jwzx.cqupt.edu.cn&lt;/code&gt;, just type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jwzx.endpoint.domain&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Visit &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.20.0.1.endpoint.domain&lt;/code&gt; instead of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.20.0.1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;details&gt;
+  &lt;summary&gt;&lt;b&gt;Advanced Notices&lt;/b&gt;&lt;/summary&gt;
+  &lt;ol&gt;
+    &lt;li&gt;Some destination server requires an TLS connection, and &lt;code&gt;*.secure.endpoint.domain&lt;/code&gt; is aimed to do that. Otherwise, &lt;code&gt;*.endpoint.domain&lt;/code&gt; will initiate a plain HTTP request to the destination.&lt;/li&gt;
+    &lt;li&gt;Considering there will be many direct IP forwards, and there is no need to acquire a certificate for them. Thus, any domain access like &lt;code&gt;jwzx.endpoint.domain&lt;/code&gt; is provided with a valid wildcard certificate, while IP accesses are not.&lt;/li&gt;
+    &lt;li&gt;Destinations with unusual port(other than 80 and 443) are not supported and their link will not be overridden.&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/details&gt;
+
+&lt;h2 id=&quot;under-the-hood&quot;&gt;Under the hood&lt;/h2&gt;
+&lt;p&gt;I used a Raspberry Pi 4 as the gateway benefited by its gigabit ethernet controller.&lt;/p&gt;
+
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;https://colab.ifengge.cn/snippets/22&quot;&gt;NGINX Configuration ➡︎&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;override-redirects&quot;&gt;Override redirects&lt;/h3&gt;
+&lt;p&gt;Of domains ending with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cqupt.edu.cn&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt; 		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^http://cqupt.edu.cn/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt; 		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^http://(.*).cqupt.edu.cn/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt;		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^https://(.*).cqupt.edu.cn/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.secure.endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Of IPs&lt;/p&gt;
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt;		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^http://([0-9.]+)/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt;		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^https://([0-9.]+)/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.secure.endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;override-links-on-pages&quot;&gt;Override links on pages.&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx_substitutions_filter&lt;/code&gt; is an enhanced &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sub_filter&lt;/code&gt; module that allows multiple regexes to replace concurrently.&lt;br /&gt;
+Check out &lt;a href=&quot;https://www.nginx.com/resources/wiki/modules/substitutions/&quot;&gt;Substitutions | NGINX&lt;/a&gt; to find out more.&lt;/p&gt;
+
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;subs_filter&lt;/span&gt;		&lt;span class=&quot;s&quot;&gt;'http://cqupt.edu.cn'&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://endpoint.domain&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;gir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;subs_filter&lt;/span&gt;		&lt;span class=&quot;s&quot;&gt;'http://(.*).cqupt.edu.cn'&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.endpoint.domain&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;gir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;subs_filter&lt;/span&gt;		&lt;span class=&quot;s&quot;&gt;'https://(.*).cqupt.edu.cn'&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.secure.endpoint.domain&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;gir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;subs_filter&lt;/span&gt;		&lt;span class=&quot;s&quot;&gt;'http://([0-9.]+)'&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.endpoint.domain&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;gir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;subs_filter&lt;/span&gt;		&lt;span class=&quot;s&quot;&gt;'https://([0-9.]+)'&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.secure.endpoint.domain&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;gir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;There is no need to match exact IPs since I configured a firewall to prevent malicious requests.&lt;/p&gt;
+
+&lt;p&gt;Use the following statement to resolve our internal domains from our internal DNS servers.&lt;/p&gt;
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;resolver&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;[ns1.ip]&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;[ns2.ip]&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;valid=3600s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then configure &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iptables&lt;/code&gt; to filter invalid requests.&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Generated by xtables-save v1.8.3 on Thu Dec 19 03:26:35 2019&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;filter
+:INPUT ACCEPT &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0:0]
+:FORWARD ACCEPT &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0:0]
+:OUTPUT ACCEPT &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0:0]
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; state &lt;span class=&quot;nt&quot;&gt;--state&lt;/span&gt; RELATED,ESTABLISHED &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; ACCEPT
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;network/mask] &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; tcp &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; owner &lt;span class=&quot;nt&quot;&gt;--uid-owner&lt;/span&gt; 33 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; ACCEPT
+...
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ns1.ip] &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; udp &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; owner &lt;span class=&quot;nt&quot;&gt;--uid-owner&lt;/span&gt; 33 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; ACCEPT
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ns2.ip] &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; udp &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; owner &lt;span class=&quot;nt&quot;&gt;--uid-owner&lt;/span&gt; 33 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; ACCEPT
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; owner &lt;span class=&quot;nt&quot;&gt;--uid-owner&lt;/span&gt; 33 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; REJECT &lt;span class=&quot;nt&quot;&gt;--reject-with&lt;/span&gt; icmp-port-unreachable
+COMMIT
+&lt;span class=&quot;c&quot;&gt;# Completed on Thu Dec 19 03:26:35 2019&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;endpoint.domain&lt;/code&gt; denotes the domain name of the endpoint just in this article. Remember to replace it in the real world. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>To make our school’s internal resources accessible from the internet, I built a reverse proxy to expose everything behind our firewall to the internet.  Disclaimer: This is an experimental project and everything is protected via Cloudflare Access with Origin Pull to ensure that only me and the people I authorized can access the endpoint.How to use it?  Domain Available: Replace cqupt.edu.cn with endpoint.domain1 in the domain part of any URL.  IP Only: Prepend IP address in front of .endpoint.domain.e.g.  If you want to visit jwzx.cqupt.edu.cn, just type jwzx.endpoint.domain  Visit 127.20.0.1.endpoint.domain instead of 127.20.0.1  Advanced Notices      Some destination server requires an TLS connection, and *.secure.endpoint.domain is aimed to do that. Otherwise, *.endpoint.domain will initiate a plain HTTP request to the destination.    Considering there will be many direct IP forwards, and there is no need to acquire a certificate for them. Thus, any domain access like jwzx.endpoint.domain is provided with a valid wildcard certificate, while IP accesses are not.    Destinations with unusual port(other than 80 and 443) are not supported and their link will not be overridden.  Under the hoodI used a Raspberry Pi 4 as the gateway benefited by its gigabit ethernet controller.NGINX Configuration ➡︎Override redirectsOf domains ending with cqupt.edu.cnproxy_redirect 		~^http://cqupt.edu.cn/(.*) https://endpoint.domain/$1;proxy_redirect 		~^http://(.*).cqupt.edu.cn/(.*) https://$1.endpoint.domain/$2;proxy_redirect		~^https://(.*).cqupt.edu.cn/(.*) https://$1.secure.endpoint.domain/$2;Of IPsproxy_redirect		~^http://([0-9.]+)/(.*) http://$1.endpoint.domain/$2;proxy_redirect		~^https://([0-9.]+)/(.*) http://$1.secure.endpoint.domain/$2;Override links on pages.nginx_substitutions_filter is an enhanced sub_filter module that allows multiple regexes to replace concurrently.Check out Substitutions | NGINX to find out more.subs_filter		'http://cqupt.edu.cn' https://endpoint.domain gir;subs_filter		'http://(.*).cqupt.edu.cn' https://$1.endpoint.domain gir;subs_filter		'https://(.*).cqupt.edu.cn' https://$1.secure.endpoint.domain gir;subs_filter		'http://([0-9.]+)' http://$1.endpoint.domain gir;subs_filter		'https://([0-9.]+)' http://$1.secure.endpoint.domain gir;There is no need to match exact IPs since I configured a firewall to prevent malicious requests.Use the following statement to resolve our internal domains from our internal DNS servers.resolver [ns1.ip] [ns2.ip] valid=3600s;Then configure iptables to filter invalid requests.# Generated by xtables-save v1.8.3 on Thu Dec 19 03:26:35 2019*filter:INPUT ACCEPT [0:0]:FORWARD ACCEPT [0:0]:OUTPUT ACCEPT [0:0]-A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT-A OUTPUT -d [network/mask] -p tcp -m owner --uid-owner 33 -j ACCEPT...-A OUTPUT -d [ns1.ip] -p udp -m owner --uid-owner 33 -j ACCEPT-A OUTPUT -d [ns2.ip] -p udp -m owner --uid-owner 33 -j ACCEPT-A OUTPUT -m owner --uid-owner 33 -j REJECT --reject-with icmp-port-unreachableCOMMIT# Completed on Thu Dec 19 03:26:35 2019            endpoint.domain denotes the domain name of the endpoint just in this article. Remember to replace it in the real world. &amp;#8617;&amp;#xfe0e;      </summary></entry><entry><title>重庆邮电大学内网外入</title><id>https://gufeng.sh/work/cqupt-rproxy/chs/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/cqupt-rproxy/chs/" /><published>2019-12-19T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;为了让校内的资源能够在校外使用，我搭建了这个内网外入的代理来绕过学校防火墙的限制。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;声明&lt;/strong&gt;: 该项目仅用于学习和研究目的，项目中的所有资源都被 Cloudflare Access 和 Origin Pull 保护。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p class=&quot;browser&quot;&gt;&lt;img src=&quot;https://img.akacdn.app/d1efbd7d30ee3ed76c14986af25f3499.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;如何使用&quot;&gt;如何使用？&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;如果有域名：&lt;/strong&gt; 将域名中的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cqupt.edu.cn&lt;/code&gt; 替换为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;endpoint.domain&lt;/code&gt;&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 即可。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;如果只有 IP 地址:&lt;/strong&gt; 将 IP 地址放在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.endpoint.domain&lt;/code&gt; 域名之前。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;举个例子&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;如果你要访问 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jwzx.cqupt.edu.cn&lt;/code&gt;，则在外网访问 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jwzx.endpoint.domain&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.20.0.1.endpoint.domain&lt;/code&gt; 来访问 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.20.0.1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;details&gt;
+  &lt;summary&gt;&lt;b&gt;Advanced Notices&lt;/b&gt;&lt;/summary&gt;
+  &lt;ol&gt;
+    &lt;li&gt;Some destination server requires an TLS connection, and &lt;code&gt;*.secure.endpoint.domain&lt;/code&gt; is aimed to do that. Otherwise, &lt;code&gt;*.endpoint.domain&lt;/code&gt; will initiate a plain HTTP request to the destination.&lt;/li&gt;
+    &lt;li&gt;Considering there will be many direct IP forwards, and there is no need to acquire a certificate for them. Thus, any domain access like &lt;code&gt;jwzx.endpoint.domain&lt;/code&gt; is provided with a valid wildcard certificate, while IP accesses are not.&lt;/li&gt;
+    &lt;li&gt;Destinations with unusual port(other than 80 and 443) are not supported and their link will not be overridden.&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/details&gt;
+
+&lt;h2 id=&quot;原理&quot;&gt;原理&lt;/h2&gt;
+&lt;p&gt;我选择了树莓派 4 来作为最终网关。&lt;/p&gt;
+
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;https://colab.ifengge.cn/snippets/22&quot;&gt;NGINX 配置文件 ➡︎&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;覆盖重定向&quot;&gt;覆盖重定向&lt;/h3&gt;
+&lt;p&gt;对于使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cqupt.edu.cn&lt;/code&gt; 为结尾的域名：&lt;/p&gt;
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt; 		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^https?://cqupt.edu.cn/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt; 		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^http://(.*).cqupt.edu.cn/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt;		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^https://(.*).cqupt.edu.cn/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.secure.endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;对于 IP 地址：&lt;/p&gt;
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt;		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^http://([0-9.]+)/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;proxy_redirect&lt;/span&gt;		&lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;^https://([0-9.]+)/(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.secure.endpoint.domain/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;替换页面中的链接&quot;&gt;替换页面中的链接&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx_substitutions_filter&lt;/code&gt; 是增强版的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sub_filter&lt;/code&gt;，它可以实现多个正则表达式同时进行替换&lt;br /&gt;
+访问 &lt;a href=&quot;https://www.nginx.com/resources/wiki/modules/substitutions/&quot;&gt;Substitutions | NGINX&lt;/a&gt; 来查看更多信息。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ngin&quot;&gt;subs_filter		'https?://cqupt.edu.cn' https://endpoint.domain gir;
+subs_filter		'http://(.*).cqupt.edu.cn' https://$1.endpoint.domain gir;
+subs_filter		'https://(.*).cqupt.edu.cn' https://$1.secure.endpoint.domain gir;
+subs_filter		'http://([0-9.]+)' http://$1.endpoint.domain gir;
+subs_filter		'https://([0-9.]+)' http://$1.secure.endpoint.domain gir;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;因为接下来会配置防火墙，我们不需要在此匹配到精确的 IP 地址，也不需要做过多检查。&lt;/p&gt;
+
+&lt;p&gt;使用下面的语句来从校内的 DNS 服务器解析内部专用的域名&lt;/p&gt;
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;resolver&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;[ns1.ip]&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;[ns2.ip]&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;valid=3600s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最后配置 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iptables&lt;/code&gt; 防火墙来过滤非正常请求&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Generated by xtables-save v1.8.3 on Thu Dec 19 03:26:35 2019&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;filter
+:INPUT ACCEPT &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0:0]
+:FORWARD ACCEPT &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0:0]
+:OUTPUT ACCEPT &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0:0]
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; state &lt;span class=&quot;nt&quot;&gt;--state&lt;/span&gt; RELATED,ESTABLISHED &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; ACCEPT
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;network/mask] &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; tcp &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; owner &lt;span class=&quot;nt&quot;&gt;--uid-owner&lt;/span&gt; 33 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; ACCEPT
+...
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ns1.ip] &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; udp &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; owner &lt;span class=&quot;nt&quot;&gt;--uid-owner&lt;/span&gt; 33 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; ACCEPT
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ns2.ip] &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; udp &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; owner &lt;span class=&quot;nt&quot;&gt;--uid-owner&lt;/span&gt; 33 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; ACCEPT
+&lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; OUTPUT &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; owner &lt;span class=&quot;nt&quot;&gt;--uid-owner&lt;/span&gt; 33 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; REJECT &lt;span class=&quot;nt&quot;&gt;--reject-with&lt;/span&gt; icmp-port-unreachable
+COMMIT
+&lt;span class=&quot;c&quot;&gt;# Completed on Thu Dec 19 03:26:35 2019&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;endpoint.domain&lt;/code&gt; 仅在本文中代表内网外入的入口域名。当您需要使用内网外入时，请将其替换为真实的入口域名。 &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+          
+          
+        
+          &lt;p&gt;&lt;a href=&quot;https://cqupt.tk/&quot;&gt;&lt;small&gt;◉ Direct Link to Original Site&lt;/small&gt;&lt;/a&gt;&lt;/p&gt;
+        
+      
+        </content><summary>为了让校内的资源能够在校外使用，我搭建了这个内网外入的代理来绕过学校防火墙的限制。  声明: 该项目仅用于学习和研究目的，项目中的所有资源都被 Cloudflare Access 和 Origin Pull 保护。如何使用？  如果有域名： 将域名中的 cqupt.edu.cn 替换为 endpoint.domain1 即可。  如果只有 IP 地址: 将 IP 地址放在 .endpoint.domain 域名之前。举个例子  如果你要访问 jwzx.cqupt.edu.cn，则在外网访问 jwzx.endpoint.domain  使用 127.20.0.1.endpoint.domain 来访问 127.20.0.1  Advanced Notices      Some destination server requires an TLS connection, and *.secure.endpoint.domain is aimed to do that. Otherwise, *.endpoint.domain will initiate a plain HTTP request to the destination.    Considering there will be many direct IP forwards, and there is no need to acquire a certificate for them. Thus, any domain access like jwzx.endpoint.domain is provided with a valid wildcard certificate, while IP accesses are not.    Destinations with unusual port(other than 80 and 443) are not supported and their link will not be overridden.  原理我选择了树莓派 4 来作为最终网关。NGINX 配置文件 ➡︎覆盖重定向对于使用 cqupt.edu.cn 为结尾的域名：proxy_redirect 		~^https?://cqupt.edu.cn/(.*) https://endpoint.domain/$1;proxy_redirect 		~^http://(.*).cqupt.edu.cn/(.*) https://$1.endpoint.domain/$2;proxy_redirect		~^https://(.*).cqupt.edu.cn/(.*) https://$1.secure.endpoint.domain/$2;对于 IP 地址：proxy_redirect		~^http://([0-9.]+)/(.*) http://$1.endpoint.domain/$2;proxy_redirect		~^https://([0-9.]+)/(.*) http://$1.secure.endpoint.domain/$2;替换页面中的链接nginx_substitutions_filter 是增强版的 sub_filter，它可以实现多个正则表达式同时进行替换访问 Substitutions | NGINX 来查看更多信息。subs_filter		'https?://cqupt.edu.cn' https://endpoint.domain gir;subs_filter		'http://(.*).cqupt.edu.cn' https://$1.endpoint.domain gir;subs_filter		'https://(.*).cqupt.edu.cn' https://$1.secure.endpoint.domain gir;subs_filter		'http://([0-9.]+)' http://$1.endpoint.domain gir;subs_filter		'https://([0-9.]+)' http://$1.secure.endpoint.domain gir;因为接下来会配置防火墙，我们不需要在此匹配到精确的 IP 地址，也不需要做过多检查。使用下面的语句来从校内的 DNS 服务器解析内部专用的域名resolver [ns1.ip] [ns2.ip] valid=3600s;最后配置 iptables 防火墙来过滤非正常请求# Generated by xtables-save v1.8.3 on Thu Dec 19 03:26:35 2019*filter:INPUT ACCEPT [0:0]:FORWARD ACCEPT [0:0]:OUTPUT ACCEPT [0:0]-A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT-A OUTPUT -d [network/mask] -p tcp -m owner --uid-owner 33 -j ACCEPT...-A OUTPUT -d [ns1.ip] -p udp -m owner --uid-owner 33 -j ACCEPT-A OUTPUT -d [ns2.ip] -p udp -m owner --uid-owner 33 -j ACCEPT-A OUTPUT -m owner --uid-owner 33 -j REJECT --reject-with icmp-port-unreachableCOMMIT# Completed on Thu Dec 19 03:26:35 2019            endpoint.domain 仅在本文中代表内网外入的入口域名。当您需要使用内网外入时，请将其替换为真实的入口域名。 &amp;#8617;&amp;#xfe0e;      </summary></entry><entry><title>CloudFront Origin Router</title><id>https://gufeng.sh/note/cloudfront-origin-router/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/cloudfront-origin-router/" /><published>2019-12-09T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;CloudFront delivers websites to users from the nearest locations. Meanwhile, it forward requests that are not cached or not permitted to be cached to your origin servers. However, it is not flexible enough and neither smart enough since it cannot automatically decide the fastest origin based on the response time from edge nodes to origin servers, cannot differentiate execution timeout and connect timeout, etc.&lt;/p&gt;
+
+&lt;h2 id=&quot;lambda--cloudfront&quot;&gt;Lambda × CloudFront&lt;/h2&gt;
+&lt;p&gt;AWS has a service called Lambda which offers a serverless script execution environment. When you bring it to CloudFront, with replication on every edge node, it is called Lambda@Edge. Then you can use a script to amend requests before CloudFront sends it to the original server.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Lambda@Edge only supports&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nodejs8.10&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nodejs10.x&lt;/code&gt;, or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;python3.7&lt;/code&gt; even though Go and other languages can be uploaded on the setup page. Besides, Lambda@Edge has only one second of execution time.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;To start, given that Lambda@Edge is a form of AWS Lambda, you can use the examples illustrated in &lt;a href=&quot;https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model.html&quot;&gt;Building Lambda Functions with Python&lt;/a&gt;. It is worth noting that the parameter &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;event&lt;/code&gt; has a structure defined here: &lt;a href=&quot;https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html&quot;&gt;Lambda@Edge Event Structure&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Records'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'cf'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'request'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then define a const array that holds all available origins:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;SERVERS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;o1.example.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;443&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;o2.example.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;443&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can make a simple HTTP request to determine the fastest origin by using the following code:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# s: Server Object
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;connection&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HTTPConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'host'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'port'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;HEAD&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getresponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;except&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[Down] unreachable host:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'host'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[OK] reachable host:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'host'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pushlish&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Better use a multithreading model since there is a time limit:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SERVERS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;threading&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,)).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;You may need a watchdog so as to avoid timeout:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;guard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;publish&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;threading&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;guard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After this, you have to implement a listener that only accept the first result from all threads, and finally, redirect the request to the fastest responder in the handler:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;origin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;domainName&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;choice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;origin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;choice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You might not have to determine the fastest one each time when CloudFront is about to initiate a connection to an original server, so you have to make sure that you implemented a caching mechanism.&lt;/p&gt;
+
+&lt;h2 id=&quot;performances&quot;&gt;Performances&lt;/h2&gt;
+&lt;p&gt;Once this is deployed you can view logs in the CloudWatch console.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1ms&lt;/code&gt; for common situations&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://img.akacdn.app/5e7bc941389a060b9dd929ece54ba406.png&quot; alt=&quot;5e7bc941389a060b9dd929ece54ba406.png&quot; class=&quot;size-small&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;800+ms&lt;/code&gt; to update cached origin&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://img.akacdn.app/5a80397f4b5bd92b601a27af966771b1.png&quot; alt=&quot;5a80397f4b5bd92b601a27af966771b1.png&quot; class=&quot;size-small&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;900+ms&lt;/code&gt; when all origins are not reachable(result advocated by watchdog)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://img.akacdn.app/97e6862a1790a859f52349c879cbbbc6.png&quot; alt=&quot;97e6862a1790a859f52349c879cbbbc6.png&quot; class=&quot;size-small&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;See &lt;a href=&quot;https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-requirements-limits.html#lambda-requirements-lambda-function-configuration&quot;&gt;Lambda Function Configuration and Execution Environment&lt;/a&gt; &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>CloudFront delivers websites to users from the nearest locations. Meanwhile, it forward requests that are not cached or not permitted to be cached to your origin servers. However, it is not flexible enough and neither smart enough since it cannot automatically decide the fastest origin based on the response time from edge nodes to origin servers, cannot differentiate execution timeout and connect timeout, etc.Lambda × CloudFrontAWS has a service called Lambda which offers a serverless script execution environment. When you bring it to CloudFront, with replication on every edge node, it is called Lambda@Edge. Then you can use a script to amend requests before CloudFront sends it to the original server.  Lambda@Edge only supports1 nodejs8.10, nodejs10.x, or python3.7 even though Go and other languages can be uploaded on the setup page. Besides, Lambda@Edge has only one second of execution time.To start, given that Lambda@Edge is a form of AWS Lambda, you can use the examples illustrated in Building Lambda Functions with Python. It is worth noting that the parameter event has a structure defined here: Lambda@Edge Event Structure.def handler(event, context):    request = event['Records'][0]['cf']['request']    return requestThen define a const array that holds all available origins:SERVERS = [    {&quot;host&quot;: &quot;o1.example.com&quot;, &quot;port&quot;: 443},    {&quot;host&quot;: &quot;o2.example.com&quot;, &quot;port&quot;: 443},    ...]You can make a simple HTTP request to determine the fastest origin by using the following code:# s: Server Objectdef evaluate(s):    try:        connection = http.client.HTTPConnection(s['host'], s['port'], timeout=0.8)        connection.request(&quot;HEAD&quot;, &quot;/&quot;)        connection.getresponse()    except:        print(&quot;[Down] unreachable host:&quot; + s['host'])        return    print(&quot;[OK] reachable host:&quot; + s['host'])    ... pushlish resultBetter use a multithreading model since there is a time limit:for server in SERVERS:    threading.Thread(target=evaluate, args=(server,)).start()You may need a watchdog so as to avoid timeout:def guard():    time.sleep(0.9)    ... publish a default serverthreading.Thread(target=guard).start()After this, you have to implement a listener that only accept the first result from all threads, and finally, redirect the request to the fastest responder in the handler:request[&quot;origin&quot;][&quot;custom&quot;][&quot;domainName&quot;] = choice[&quot;host&quot;]request[&quot;origin&quot;][&quot;custom&quot;][&quot;port&quot;] = choice[&quot;port&quot;]You might not have to determine the fastest one each time when CloudFront is about to initiate a connection to an original server, so you have to make sure that you implemented a caching mechanism.PerformancesOnce this is deployed you can view logs in the CloudWatch console.1ms for common situations800+ms to update cached origin900+ms when all origins are not reachable(result advocated by watchdog)            See Lambda Function Configuration and Execution Environment &amp;#8617;&amp;#xfe0e;      </summary></entry><entry><title>The Rakish-Land's Auth Flow</title><id>https://gufeng.sh/note/rakishland-authflow/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/rakishland-authflow/" /><published>2019-12-03T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;h2 class=&quot;no_toc&quot; id=&quot;table-of-contents&quot;&gt;Table of Contents&lt;/h2&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#intro&quot; id=&quot;markdown-toc-intro&quot;&gt;Introducing the Rakish Land&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#auth-flow&quot; id=&quot;markdown-toc-auth-flow&quot;&gt;Our auth flow&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#createing-authorization-url&quot; id=&quot;markdown-toc-createing-authorization-url&quot;&gt;Creating an authorization URL&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#receiving-token&quot; id=&quot;markdown-toc-receiving-token&quot;&gt;Receiving tokens&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#verify-users&quot; id=&quot;markdown-toc-verify-users&quot;&gt;Verifying user’s eligibility&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#data-synchronizing&quot; id=&quot;markdown-toc-data-synchronizing&quot;&gt;Player’s data synchronizing&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;intro&quot;&gt;Introducing the Rakish Land&lt;/h2&gt;
+&lt;p&gt;I’ve been working on starting a private Minecraft server these days, which is called the Rakish Land.&lt;br /&gt;
+Although whitelist and the Mojang account verifying is safe enough, they can neither prevent unknown players from joining our server nor synchronize player data to our own databases. Therefore, we’ll introduce our own authentication flow using OAuth 2.0.&lt;/p&gt;
+
+&lt;h2 class=&quot;no_toc&quot; id=&quot;lets-embrace-bukkit-library&quot;&gt;Let’s embrace Bukkit library&lt;/h2&gt;
+&lt;p&gt;Firstly, we have to decide between developing a server mod(using Forge) or a Bukkit plugin. Apparently, using a mod requires additional steps for users to connect to our systems, which might ruin players’ experience during preparation.&lt;br /&gt;
+&lt;strong&gt;Bukkit&lt;/strong&gt;, a great and stable server software that provides plugin supports, is our decision to program for. We started our development based on Bukkit’s APIs using pure Kotlin.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;We used Gson, OkHttp, and Retrofit to queue our network requests.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;auth-flow&quot;&gt;Our auth flow&lt;/h2&gt;
+&lt;p&gt;Given our website has already supported OAuth 2 authorization flows, we just need to write our plugin side part as an OAuth 2 client.&lt;br /&gt;
+We still want users to confirm their identity, therefore the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Authorization Code Grant&lt;/code&gt; will be our authorization policy. All of our actions conform to the &lt;a href=&quot;https://tools.ietf.org/html/rfc6749#page-24&quot;&gt;RFC 6749&lt;/a&gt;.&lt;br /&gt;
+We’ll redirect new players to our authorize endpoint, use the authorization code to acquire access token and refresh token, use the access token to query players’ license, then save their refresh token using &lt;a href=&quot;https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/metadata/Metadatable.html&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;	setMetadata​(String metadataKey, MetadataValue newMetadataValue)&lt;/code&gt;&lt;/a&gt;&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; method provided by Bukkit SDK.&lt;br /&gt;
+As above, when a player joined our server, we’ll check if this player has metadata of refresh token. If not, we regard this player as a new player, then we lock this player’s location, inventory, experience, health, food level, and other attributes, and ask this player to authenticate.&lt;/p&gt;
+
+&lt;h2 id=&quot;createing-authorization-url&quot;&gt;Creating an authorization URL&lt;/h2&gt;
+&lt;p&gt;Considering authorization URLs to contain &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;response_type&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;client_id&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;redirect_uri&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;state&lt;/code&gt;, etc, these URLs will be very long for humans to type. We used our link shorten APIs to simplify these URLs to the form of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go.ifengge.cn/x&lt;/code&gt; and keep it for a day long.&lt;br /&gt;
+Using a player’s UUID as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;state&lt;/code&gt; parameter has two advantages. One is that we can easily identify user’s UUID when we try to request licenses, and the other reason, most importantly, we could build identical URLs for users to authorize(see how authorization URLs are built), then CloudFront&lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; could cache API’s respond to save link spaces, and decrease response time.&lt;/p&gt;
+
+&lt;h2 id=&quot;receiving-token&quot;&gt;Receiving tokens&lt;/h2&gt;
+&lt;p&gt;When a user authorized from our authorize endpoint, the authorize endpoint will redirect the user to a new URL with authorization code. We’ll use this code to exchange tokens from our token endpoint, this is standard.&lt;br /&gt;
+We implemented a simple HTTP server integrated into the plugin jar so as to receive authorization code as the new URL mentioned above after user authorized, and the server will automatically start when Bukkit calls &lt;a href=&quot;https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/plugin/java/JavaPlugin.html#onEnable--&quot;&gt;onEnable()&lt;/a&gt;. Then we used NGINX as a reverse proxy to cast &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;https://api.ifengge.cn/minecraft/login/&lt;/code&gt; to this simple server.&lt;br /&gt;
+Then the simple server has authorization code. In other words, our plugin has an authorization code to exchange tokens! Then we’ll do it by appending this code to our request to our token endpoint, and if we succeed(User might reject the authorize request, or be blocked during the authorize flow), we get both access token and refresh token.&lt;/p&gt;
+
+&lt;h2 id=&quot;verify-users&quot;&gt;Verifying user’s eligibility&lt;/h2&gt;
+&lt;p&gt;We’ll attach the access token to our user account APIs to check whether this user has access to our server, download Dalvik’s Club ID profile, and register this player’s Mojang profile to our database.&lt;br /&gt;
+As mentioned in &lt;a href=&quot;#createing-authorization-url&quot;&gt;Creating an authorization URL&lt;/a&gt;, we’ll store the refresh token to the player’s metadata.&lt;/p&gt;
+
+&lt;h2 id=&quot;data-synchronizing&quot;&gt;Player’s data synchronizing&lt;/h2&gt;
+&lt;p&gt;When a player with refresh token metadata joined this server again, we cannot determine whether this player is eligible immediately, but we would not bother this player until we confirmed that this player’s license has expired or revoked.&lt;br /&gt;
+We’ll do our reverify process in the background by using the refresh token from this player’s metadata to exchange a new pair of a new access token and a new refresh token from the token endpoint, which is standard OAuth2 procedure as well.&lt;br /&gt;
+Then we reperform our request to license API and if legitimate, we’ll upload this player’s new login information. Otherwise, we’ll remove this player’s refresh token metadata, notify this player and kick this player from the server after 5 minutes, then call our unregister API with player’s UUID. If this player rejoins again, he will be asked for authorization just like a new player, except that all this player’s property remains.&lt;/p&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Metadata are not persistent. None of them will exist after server restarts. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;We moved Minecraft and go.ifengge.cn server under the same LAN eventually, then we did some trick on the link shorten API to reuse identical links. This did reduce many response time. &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>Table of Contents  Introducing the Rakish Land  Our auth flow  Creating an authorization URL  Receiving tokens  Verifying user’s eligibility  Player’s data synchronizingIntroducing the Rakish LandI’ve been working on starting a private Minecraft server these days, which is called the Rakish Land.Although whitelist and the Mojang account verifying is safe enough, they can neither prevent unknown players from joining our server nor synchronize player data to our own databases. Therefore, we’ll introduce our own authentication flow using OAuth 2.0.Let’s embrace Bukkit libraryFirstly, we have to decide between developing a server mod(using Forge) or a Bukkit plugin. Apparently, using a mod requires additional steps for users to connect to our systems, which might ruin players’ experience during preparation.Bukkit, a great and stable server software that provides plugin supports, is our decision to program for. We started our development based on Bukkit’s APIs using pure Kotlin.  We used Gson, OkHttp, and Retrofit to queue our network requests.Our auth flowGiven our website has already supported OAuth 2 authorization flows, we just need to write our plugin side part as an OAuth 2 client.We still want users to confirm their identity, therefore the Authorization Code Grant will be our authorization policy. All of our actions conform to the RFC 6749.We’ll redirect new players to our authorize endpoint, use the authorization code to acquire access token and refresh token, use the access token to query players’ license, then save their refresh token using 	setMetadata​(String metadataKey, MetadataValue newMetadataValue)1 method provided by Bukkit SDK.As above, when a player joined our server, we’ll check if this player has metadata of refresh token. If not, we regard this player as a new player, then we lock this player’s location, inventory, experience, health, food level, and other attributes, and ask this player to authenticate.Creating an authorization URLConsidering authorization URLs to contain response_type, client_id, redirect_uri, state, etc, these URLs will be very long for humans to type. We used our link shorten APIs to simplify these URLs to the form of go.ifengge.cn/x and keep it for a day long.Using a player’s UUID as the state parameter has two advantages. One is that we can easily identify user’s UUID when we try to request licenses, and the other reason, most importantly, we could build identical URLs for users to authorize(see how authorization URLs are built), then CloudFront2 could cache API’s respond to save link spaces, and decrease response time.Receiving tokensWhen a user authorized from our authorize endpoint, the authorize endpoint will redirect the user to a new URL with authorization code. We’ll use this code to exchange tokens from our token endpoint, this is standard.We implemented a simple HTTP server integrated into the plugin jar so as to receive authorization code as the new URL mentioned above after user authorized, and the server will automatically start when Bukkit calls onEnable(). Then we used NGINX as a reverse proxy to cast https://api.ifengge.cn/minecraft/login/ to this simple server.Then the simple server has authorization code. In other words, our plugin has an authorization code to exchange tokens! Then we’ll do it by appending this code to our request to our token endpoint, and if we succeed(User might reject the authorize request, or be blocked during the authorize flow), we get both access token and refresh token.Verifying user’s eligibilityWe’ll attach the access token to our user account APIs to check whether this user has access to our server, download Dalvik’s Club ID profile, and register this player’s Mojang profile to our database.As mentioned in Creating an authorization URL, we’ll store the refresh token to the player’s metadata.Player’s data synchronizingWhen a player with refresh token metadata joined this server again, we cannot determine whether this player is eligible immediately, but we would not bother this player until we confirmed that this player’s license has expired or revoked.We’ll do our reverify process in the background by using the refresh token from this player’s metadata to exchange a new pair of a new access token and a new refresh token from the token endpoint, which is standard OAuth2 procedure as well.Then we reperform our request to license API and if legitimate, we’ll upload this player’s new login information. Otherwise, we’ll remove this player’s refresh token metadata, notify this player and kick this player from the server after 5 minutes, then call our unregister API with player’s UUID. If this player rejoins again, he will be asked for authorization just like a new player, except that all this player’s property remains.            Metadata are not persistent. None of them will exist after server restarts. &amp;#8617;&amp;#xfe0e;              We moved Minecraft and go.ifengge.cn server under the same LAN eventually, then we did some trick on the link shorten API to reuse identical links. This did reduce many response time. &amp;#8617;&amp;#xfe0e;      </summary></entry><entry><title>HTAA Recruit Post</title><id>https://gufeng.sh/work/htaa-recruit/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/htaa-recruit/" /><published>2019-09-02T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;&lt;a href=&quot;https://img.akacdn.app/image/X2aO&quot;&gt;&lt;img src=&quot;https://img.akacdn.app/57800373b599b7f4beef0cb9ab9df1a3.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+HTAA is an abbreviation of the Hardware Technology and Application Association.&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>HTAA is an abbreviation of the Hardware Technology and Application Association.</summary></entry><entry><title>Calendarista</title><id>https://gufeng.sh/work/calendarista/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/calendarista/" /><published>2019-08-20T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;This tool will provide you a way to subscribe to students’ class schedules on your calendar on PCs, mailboxes or iCloud devices. Thereby you can get informed about forthcoming classes via notification, including the professor’s name, classroom it will take place and the exact time.&lt;/p&gt;
+
+&lt;p&gt;Also, subscribing to a calendar means classes can be auto-updated. You will never bother with semester changes or temporary class adjustments as long as they are updated by the academic affairs office.&lt;/p&gt;
+
+&lt;p&gt;As an inadvertent advantage, students can subscribe to multiple class tables with one device, therefore you can add with your friend’s schedule together and compare leisures easily.&lt;/p&gt;
+
+&lt;h2 id=&quot;under-the-hood&quot;&gt;Under the hood&lt;/h2&gt;
+&lt;p&gt;The working mechanism is quite straightforward. The server will simply return an iCalendar&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; file contains all your class schedules over the semester.
+Your calendar provider will re-download this iCalendar file periodically in order to provide you an updated schedule.&lt;/p&gt;
+
+&lt;h2 id=&quot;further-usages&quot;&gt;Further Usages&lt;/h2&gt;
+&lt;p&gt;Benefited by integrating the schedule into the iOS calendar, I found there are many feasible ways to exploit usages:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;I can synchronize schedules and along with their alarms with Apple Watch and Mac without any additional setup.&lt;/li&gt;
+  &lt;li&gt;I can ask HomePod about the next class.&lt;/li&gt;
+  &lt;li&gt;It is very convenient to share the entire schedule with friends, who can preview it in Safari without adding.&lt;/li&gt;
+  &lt;li&gt;Collaborating with Shortcuts.app makes things easier. I created a &lt;a href=&quot;https://www.icloud.com/shortcuts/281c37cf09e3450e9ae98782448ae55a&quot;&gt;shortcut&lt;/a&gt; to set a wakeup alarm based on the time of the first class of the next day.&lt;/li&gt;
+  &lt;li&gt;It is separated from other schedules, therefore you can control the visibility of class schedules in your calendar. Additionally, you can retrieve schedules using &lt;a href=&quot;https://developer.apple.com/documentation/eventkit/ekeventstore&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EKEventStore.calendar(withIdentifier:)&lt;/code&gt;&lt;/a&gt; if you are going to develop your own app.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;/h2&gt;
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;https://docs.ifengge.cn/display/site/CQUPT+APIs&quot;&gt;View on Dalvik’s API Docs&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/ICalendar&quot;&gt;iCalendar - Wikipedia&lt;/a&gt; &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>IntroThis tool will provide you a way to subscribe to students’ class schedules on your calendar on PCs, mailboxes or iCloud devices. Thereby you can get informed about forthcoming classes via notification, including the professor’s name, classroom it will take place and the exact time.Also, subscribing to a calendar means classes can be auto-updated. You will never bother with semester changes or temporary class adjustments as long as they are updated by the academic affairs office.As an inadvertent advantage, students can subscribe to multiple class tables with one device, therefore you can add with your friend’s schedule together and compare leisures easily.Under the hoodThe working mechanism is quite straightforward. The server will simply return an iCalendar1 file contains all your class schedules over the semester.Your calendar provider will re-download this iCalendar file periodically in order to provide you an updated schedule.Further UsagesBenefited by integrating the schedule into the iOS calendar, I found there are many feasible ways to exploit usages:  I can synchronize schedules and along with their alarms with Apple Watch and Mac without any additional setup.  I can ask HomePod about the next class.  It is very convenient to share the entire schedule with friends, who can preview it in Safari without adding.  Collaborating with Shortcuts.app makes things easier. I created a shortcut to set a wakeup alarm based on the time of the first class of the next day.  It is separated from other schedules, therefore you can control the visibility of class schedules in your calendar. Additionally, you can retrieve schedules using EKEventStore.calendar(withIdentifier:) if you are going to develop your own app.UsageView on Dalvik’s API Docs            iCalendar - Wikipedia &amp;#8617;&amp;#xfe0e;      </summary></entry><entry><title>Shots on Travel</title><id>https://gufeng.sh/work/travel-shots/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/travel-shots/" /><published>2019-08-11T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;h2 id=&quot;wuhu-anhui--china&quot;&gt;Wuhu, Anhui • China&lt;/h2&gt;
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;https://img.ifengge.cn/album/gJg&quot;&gt;View in Gallery&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;zhenjiang-jiangsu--china&quot;&gt;Zhenjiang, Jiangsu • China&lt;/h2&gt;
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;https://img.ifengge.cn/album/7da&quot;&gt;View in Gallery&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;changsha-hunan--china&quot;&gt;Changsha, Hunan • China&lt;/h2&gt;
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;https://img.ifengge.cn/album/izS&quot;&gt;View in Gallery&lt;/a&gt;&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>Wuhu, Anhui • ChinaView in GalleryZhenjiang, Jiangsu • ChinaView in GalleryChangsha, Hunan • ChinaView in Gallery</summary></entry><entry><title>Notes on Discrete Mathematics</title><id>https://gufeng.sh/note/notes-on-discrete-math/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/notes-on-discrete-math/" /><published>2019-07-10T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;I summarized some core mind of Discrete Mathematics, which is not so hard per se, but in textbooks, it is always described in a profound language.&lt;/p&gt;
+
+&lt;p&gt;It worth noting that this note does not contain any algorithms.&lt;/p&gt;
+
+&lt;h3 id=&quot;graph-theory&quot;&gt;Graph Theory&lt;/h3&gt;
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;http://drive.ifengge.cn/s/9eL3BgXBHT3BPTA&quot;&gt;Browse Files ➡︎&lt;/a&gt;&lt;/p&gt;
+
+
+          
+          
+        
+      
+        </content><summary>I summarized some core mind of Discrete Mathematics, which is not so hard per se, but in textbooks, it is always described in a profound language.It worth noting that this note does not contain any algorithms.Graph TheoryBrowse Files ➡︎</summary></entry><entry><title>RIME - An Intelligent Multi-Language IME</title><id>https://gufeng.sh/note/introducing-rime/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/introducing-rime/" /><published>2019-07-06T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;h2 id=&quot;whats-this&quot;&gt;What’s This?&lt;/h2&gt;
+&lt;p&gt;In a general word, this is an Input Engine that could handle any languages in the world rather than just an Input Method, ergo it can handle Emoji, Greek Alphabets, Symbols, and any Unicode characters easefully, and of course, it is super fast.&lt;br /&gt;
+It is also fun that this IME requires dozens of customizing via editing configuration files.&lt;/p&gt;
+
+&lt;h2 id=&quot;symbol-suggestions&quot;&gt;Symbol Suggestions&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.akacdn.app/5ae7ad79efdf526da83c4faa3958f0c0.png&quot; alt=&quot;&quot; class=&quot;size-right no-resize&quot; /&gt;
+If you type a symbol like 「?」, RIME will suggest you both full and half-width symbol of 「?」, as well as other forms of which in Unicode, such as 「¿」,「‽」, and 「⸘」.&lt;/p&gt;
+&lt;h6 id=&quot;_pinyin_simpcustomyaml&quot;&gt;_pinyin_simp.custom.yaml&lt;/h6&gt;
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;patch&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;punctuator&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;half_shape&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;?&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;？&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;?&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;¿&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;‽&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;⸘&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;custom-shortcuts&quot;&gt;Custom Shortcuts&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.akacdn.app/28607c7a7a8a65c598479b61171e8c24.png&quot; alt=&quot;&quot; class=&quot;size-left no-resize&quot; /&gt;
+You can even customize dictionary to provide shortcuts, which means you can type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/em&lt;/code&gt; to enter frequently used Emojis, or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/ar&lt;/code&gt; to type arrows&lt;/p&gt;
+&lt;h6 id=&quot;_pinyin_simpcustomyaml-1&quot;&gt;_pinyin_simp.custom.yaml&lt;/h6&gt;
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;patch&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;punctuator&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;symbols&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/em&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😀&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😁&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😂&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😃&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😄&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😅&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😆&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😉&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😊&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😋&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😎&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😍&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😘&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😗&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😙&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😚&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😇&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😐&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😑&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😶&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😏&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😣&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😥&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😮&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😯&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😪&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😫&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😴&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😌&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😛&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😜&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😝&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😒&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😓&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😔&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😕&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😲&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😷&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😖&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😞&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😟&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😤&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😢&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😭&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😦&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😧&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😨&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😬&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😰&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😱&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😳&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😵&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😡&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;😠&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/ar&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;⬆&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;↗&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;➡&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;↘&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;⬇&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;↙&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;⬅&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;↖&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;↕&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;↔&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;↩&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;↪&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;⤴&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;⤵&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;🔃&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;🔄&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;🔙&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;🔚&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;🔛&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;🔜&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;🔝&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/pc&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;⌘&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⌥&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⇧&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⌃&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⎋&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⇪&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⌫&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⌦&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;↩︎&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⏎&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;↑&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;↓&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;←&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;↖&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;↘&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⇟&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;⇞&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;quick-menu&quot;&gt;Quick Menu&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.akacdn.app/39226827eded528c633e88445f14a898.png&quot; alt=&quot;&quot; class=&quot;size-right no-resize&quot; /&gt;
+Defaultly, to reach out this menu you just need to press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Control(⌃) + `&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This menu provides several options to change input maneuver, which provides flavored input methods and different language supports. In the submenu of each engine, its option can be fully customized.&lt;/p&gt;
+
+&lt;p&gt;This menu can switch between languages, full or half-width for symbols, suggest Emojis by words or not and even encodings!&lt;/p&gt;
+
+&lt;p&gt;After a configuration file has been changed, press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;⌃ + ⌥ + `&lt;/code&gt; to take effects.&lt;/p&gt;
+
+&lt;h2 id=&quot;mixed-typing--super-fast&quot;&gt;Mixed Typing &amp;amp; Super Fast&lt;/h2&gt;
+&lt;p&gt;These pictures demonstrated RIME’s mixed input ability. With dictionary customize, RIME can offer special characters input by regular 26 keys. Additional, RIME is super fast either. Its react speed taken me aback when I have my dictionary over 50000 words.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt; &lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;English and Chinese&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Emoji by words&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;https://img.akacdn.app/a1759048c6440e677b9a995d9bd5ba57.png&quot; alt=&quot;eng&quot; class=&quot;no-resize&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;https://img.akacdn.app/126422ef2331c59b6f44852c8f2561d5.png&quot; alt=&quot;emoji&quot; class=&quot;no-resize&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Phonetic&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Jargons&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;https://img.akacdn.app/82e7a96c5b19ec3fa70e7e1f2e9fd671.png&quot; alt=&quot;phonetic&quot; class=&quot;no-resize&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;https://img.akacdn.app/0344279d9a3b800abc76bc97cc036ce0.png&quot; alt=&quot;dic&quot; class=&quot;no-resize&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;intelligent-ime-knows-my-mind&quot;&gt;Intelligent IME Knows My Mind&lt;/h2&gt;
+&lt;p&gt;Multiple language users always have trouble in switching IMEs since they might want to type different languages in different apps. 
+RIME will remember what input maneuver is used in each app latestly, and it will adapt apps in the next time.&lt;/p&gt;
+
+&lt;p&gt;It can recognize Vim, iTerm, Alfred, etc by default. Besides, you can define it explicitly in configuration files.&lt;/p&gt;
+
+&lt;h2 id=&quot;misc&quot;&gt;MISC&lt;/h2&gt;
+&lt;p class=&quot;largetype&quot;&gt;&lt;a href=&quot;https://rime.im/&quot;&gt;Official Site&lt;/a&gt;&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>What’s This?In a general word, this is an Input Engine that could handle any languages in the world rather than just an Input Method, ergo it can handle Emoji, Greek Alphabets, Symbols, and any Unicode characters easefully, and of course, it is super fast.It is also fun that this IME requires dozens of customizing via editing configuration files.Symbol SuggestionsIf you type a symbol like 「?」, RIME will suggest you both full and half-width symbol of 「?」, as well as other forms of which in Unicode, such as 「¿」,「‽」, and 「⸘」._pinyin_simp.custom.yamlpatch:  punctuator:    half_shape:        &quot;?&quot;: [&quot;？&quot;, &quot;?&quot;, &quot;¿&quot;, &quot;‽&quot;, &quot;⸘&quot;]Custom ShortcutsYou can even customize dictionary to provide shortcuts, which means you can type /em to enter frequently used Emojis, or /ar to type arrows_pinyin_simp.custom.yamlpatch:  punctuator:    symbols:      &quot;/em&quot;: [😀,😁,😂,😃,😄,😅,😆,😉,😊,😋,😎,😍,😘,😗,😙,😚,😇,😐,😑,😶,😏,😣,😥,😮,😯,😪,😫,😴,😌,😛,😜,😝,😒,😓,😔,😕,😲,😷,😖,😞,😟,😤,😢,😭,😦,😧,😨,😬,😰,😱,😳,😵,😡,😠]      &quot;/ar&quot;: [⬆,↗,➡,↘,⬇,↙,⬅,↖,↕,↔,↩,↪,⤴,⤵,🔃,🔄,🔙,🔚,🔛,🔜,🔝]      &quot;/pc&quot;: [⌘, ⌥, ⇧, ⌃, ⎋, ⇪, , ⌫, ⌦, ↩︎, ⏎, ↑, ↓, ←, →, ↖, ↘, ⇟, ⇞]Quick MenuDefaultly, to reach out this menu you just need to press Control(⌃) + `This menu provides several options to change input maneuver, which provides flavored input methods and different language supports. In the submenu of each engine, its option can be fully customized.This menu can switch between languages, full or half-width for symbols, suggest Emojis by words or not and even encodings!After a configuration file has been changed, press ⌃ + ⌥ + ` to take effects.Mixed Typing &amp;amp; Super FastThese pictures demonstrated RIME’s mixed input ability. With dictionary customize, RIME can offer special characters input by regular 26 keys. Additional, RIME is super fast either. Its react speed taken me aback when I have my dictionary over 50000 words.                                      English and Chinese      Emoji by words                                  Phonetic      Jargons                          Intelligent IME Knows My MindMultiple language users always have trouble in switching IMEs since they might want to type different languages in different apps. RIME will remember what input maneuver is used in each app latestly, and it will adapt apps in the next time.It can recognize Vim, iTerm, Alfred, etc by default. Besides, you can define it explicitly in configuration files.MISCOfficial Site</summary></entry><entry><title>A Font Born With Barcodes</title><id>https://gufeng.sh/note/a-font-born-with-barcodes/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/a-font-born-with-barcodes/" /><published>2019-03-19T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;link href=&quot;https://fonts.googleapis.com/css?family=Libre+Barcode+128+Text&quot; rel=&quot;stylesheet&quot; /&gt;
+
+&lt;h2 id=&quot;preview&quot;&gt;Preview&lt;/h2&gt;
+&lt;barcode&gt;This is my #1 blog&lt;/barcode&gt;
+
+&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;This font family is named &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Libre Barcode&lt;/code&gt;.&lt;br /&gt;
+Find it on &lt;a href=&quot;https://fonts.google.com/?query=Libre+Barcode&quot;&gt;Google Fonts&lt;/a&gt;.&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>PreviewThis is my #1 blogIntroThis font family is named Libre Barcode.Find it on Google Fonts.</summary></entry><entry><title>CTAS Debugger</title><id>https://gufeng.sh/work/ctas-debugger/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/ctas-debugger/" /><published>2018-12-24T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;A Debug Tool for &lt;a href=&quot;http://172.20.2.205.cqu.pt/ctas/&quot;&gt;CTAS Student System&lt;/a&gt;. This tool includes support of both macOS and Windows, and it is ready to install in an offline environment.&lt;/p&gt;
+
+&lt;h3 id=&quot;license&quot;&gt;License&lt;/h3&gt;
+
+&lt;p&gt;This program is made by &lt;a href=&quot;https://gufeng.sh/about/&quot;&gt;Gufeng Shen&lt;/a&gt;. All rights reserved and commercial use is prohibited.&lt;/p&gt;
+
+&lt;p&gt;This program is a crack of the CTAS Student System(internal-use only). As such, it is not subject to university regulations. Use at your own risk.&lt;/p&gt;
+
+&lt;h2 id=&quot;features&quot;&gt;Features&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Edit codes directly in the webpage&lt;/li&gt;
+  &lt;li&gt;Run instantly&lt;/li&gt;
+  &lt;li&gt;Compile/Link error outputs&lt;/li&gt;
+  &lt;li&gt;Hide everything on Windows, neither a Taskbar icon nor a console window will be displayed&lt;/li&gt;
+  &lt;li&gt;Save your outputs for 5 seconds after a successfully run, then everything will disappear again&lt;/li&gt;
+  &lt;li&gt;Copy your codes automatically&lt;/li&gt;
+  &lt;li&gt;Fix page control bar&lt;/li&gt;
+  &lt;li&gt;Multiple file problems support&lt;/li&gt;
+  &lt;li&gt;Unlock copying, selecting and context menu in every CTAS pages&lt;/li&gt;
+  &lt;li&gt;Use shortcut keys to complete your homework!&lt;/li&gt;
+  &lt;li&gt;APIs available and an iOS remote client is included. You can also custom your remote control on other platforms.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;/h2&gt;
+
+&lt;h3 id=&quot;windows&quot;&gt;Windows&lt;/h3&gt;
+&lt;p&gt;Run install.bat and follow the instructions to install.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Be aware! Offline installation is only available on Windows.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;macos&quot;&gt;macOS&lt;/h3&gt;
+&lt;p&gt;If you are a macOS user, make sure &lt;a href=&quot;https://www.python.org/download/releases/3.0/&quot;&gt;Python 3&lt;/a&gt; is installed on your system, then run the command below in the terminal.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ pip3 install -r requirements.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;getting-started&quot;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;This is a guide only tested on &lt;a href=&quot;https://dl.google.com&quot;&gt;Google Chrome v70&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Before you logged in, turn on Developer Tools ( ⌥⌘I or Ctrl+Shift+I )&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Follow the regular steps and load a question.&lt;/li&gt;
+  &lt;li&gt;Run __main__.pyw
+    &lt;ul&gt;
+      &lt;li&gt;Windows: Double click, and a black window will flashing past&lt;/li&gt;
+      &lt;li&gt;macOS: Run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pyhton3 __main__.pyw&lt;/code&gt; in the terminal&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Switch to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Console&lt;/code&gt; Tab&lt;/li&gt;
+  &lt;li&gt;Change the Javascript contexts dropdown to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IFrame - main (CPractice.aspx)&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Paste everything in index.min.js then press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Enter&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Awala! You are a cheater now!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;/h2&gt;
+
+&lt;h4 id=&quot;keymaps&quot;&gt;Keymaps&lt;/h4&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Key&lt;/th&gt;
+      &lt;th&gt;Function&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Q&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Select answer A&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;W&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Select answer B&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;E&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Select answer C&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;R&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Select answer D&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;T&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Run code&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Previous question&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;S&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Subsequent question&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;G&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Navigate to bottom&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Navigate to top&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;select-and-debug&quot;&gt;Select and debug&lt;/h4&gt;
+
+&lt;p&gt;You can just copy or select something as usual. Then run and debug with Visual Studio, LLDB or something else you like.&lt;/p&gt;
+
+&lt;h4 id=&quot;edit&quot;&gt;Edit&lt;/h4&gt;
+&lt;p&gt;You can edit codes in the webpage by just click on the code section.&lt;/p&gt;
+
+&lt;p&gt;CTAS-Debugger will handle your modification and write it to your clipboard automatically.&lt;/p&gt;
+
+&lt;h4 id=&quot;run&quot;&gt;Run&lt;/h4&gt;
+
+&lt;p&gt;Follow the injected message and you’ll see a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;run&lt;/code&gt; button when your code is ready.&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>A Debug Tool for CTAS Student System. This tool includes support of both macOS and Windows, and it is ready to install in an offline environment.LicenseThis program is made by Gufeng Shen. All rights reserved and commercial use is prohibited.This program is a crack of the CTAS Student System(internal-use only). As such, it is not subject to university regulations. Use at your own risk.Features  Edit codes directly in the webpage  Run instantly  Compile/Link error outputs  Hide everything on Windows, neither a Taskbar icon nor a console window will be displayed  Save your outputs for 5 seconds after a successfully run, then everything will disappear again  Copy your codes automatically  Fix page control bar  Multiple file problems support  Unlock copying, selecting and context menu in every CTAS pages  Use shortcut keys to complete your homework!  APIs available and an iOS remote client is included. You can also custom your remote control on other platforms.InstallationWindowsRun install.bat and follow the instructions to install.  Be aware! Offline installation is only available on Windows.macOSIf you are a macOS user, make sure Python 3 is installed on your system, then run the command below in the terminal.$ pip3 install -r requirements.txtGetting StartedThis is a guide only tested on Google Chrome v70.      Before you logged in, turn on Developer Tools ( ⌥⌘I or Ctrl+Shift+I )    Follow the regular steps and load a question.  Run __main__.pyw          Windows: Double click, and a black window will flashing past      macOS: Run pyhton3 __main__.pyw in the terminal        Switch to the Console Tab  Change the Javascript contexts dropdown to IFrame - main (CPractice.aspx)  Paste everything in index.min.js then press Enter  Awala! You are a cheater now!UsageKeymaps            Key      Function                  Q      Select answer A              W      Select answer B              E      Select answer C              R      Select answer D              T      Run code              A      Previous question              S      Subsequent question              G      Navigate to bottom              g      Navigate to top      Select and debugYou can just copy or select something as usual. Then run and debug with Visual Studio, LLDB or something else you like.EditYou can edit codes in the webpage by just click on the code section.CTAS-Debugger will handle your modification and write it to your clipboard automatically.RunFollow the injected message and you’ll see a run button when your code is ready.</summary></entry><entry><title>What is DNS</title><id>https://gufeng.sh/note/dns/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/dns/" /><published>2018-02-02T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;国内有关现代的 DNS 中文资料少之又少，对 DNS 的了解大都仅限于 A - AAAA 之间，我就在此将这些坑记下吧。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;网域名称系统&lt;/strong&gt;（英文：&lt;strong&gt;Domain Name System&lt;/strong&gt;，缩写：DNS）是互联网的一项服务。它作为将域名和 IP 地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS 使用 TCP 和 UDP 端口 53。当前，对于每一级域名长度的限制是 63 个字符，域名总长度则不能超过 253 个字符。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 class=&quot;no_toc&quot; id=&quot;table-of-contents&quot;&gt;Table of Contents&lt;/h2&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#domain-level&quot; id=&quot;markdown-toc-domain-level&quot;&gt;根、顶和二级域名&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#glue-records&quot; id=&quot;markdown-toc-glue-records&quot;&gt;胶水记录&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#dnssec&quot; id=&quot;markdown-toc-dnssec&quot;&gt;DNSSEC：RRSIG 和 DS 记录&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#soa&quot; id=&quot;markdown-toc-soa&quot;&gt;NS 和 SOA 记录&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ptr&quot; id=&quot;markdown-toc-ptr&quot;&gt;PTR 反向解析记录&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#dane&quot; id=&quot;markdown-toc-dane&quot;&gt;DANE：TLSA 记录与 DNSSEC 的搭配&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#cname-flattening&quot; id=&quot;markdown-toc-cname-flattening&quot;&gt;CNAME Flattening&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ttl&quot; id=&quot;markdown-toc-ttl&quot;&gt;TTL 缓存时间&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;domain-level&quot;&gt;根、顶和二级域名&lt;/h2&gt;
+&lt;p&gt;使用 dig 软件查询一个域名 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dig example.com&lt;/code&gt; ：
+&lt;img src=&quot;https://img.akacdn.app/71104f9479a8bf08b75e9c57d1002ea8.png&quot; alt=&quot;71104f9479a8bf08b75e9c57d1002ea8.png&quot; /&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;会发现诸如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;example.com&lt;/code&gt; 的域名并不完整，它的完整写法是 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;example.com.&lt;/code&gt; 。最后的这一个点就是&lt;strong&gt;根域名&lt;/strong&gt;。
+在日常使用中，因为所有的域名都带有这一个点，我们通常就将其省略。如果为这个命令加上一个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;+trace&lt;/code&gt; 参数，就可以看到它首先会查询 “&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.&lt;/code&gt;” 这个域名。而全球的 13 台根域名服务器 (Alternative DNS root) 的 IP 地址往往被硬编码在操作系统中。&lt;/li&gt;
+  &lt;li&gt;然后 dig 软件会向根域名服务器查询 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;com.&lt;/code&gt; 域名的域名服务器，这里的 com（类似的有 cn, hk, me 等）就是 &lt;strong&gt;顶级域名（TLD）&lt;/strong&gt;。你可以注册顶级域名&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; ，但其条件要求十分苛刻。顶级域名一般由大公司从 ICANN 购买，购买后大公司就有资格建立如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;com.&lt;/code&gt; 的域名服务器，并录入到根域名系统中。&lt;/li&gt;
+  &lt;li&gt;再然后就是我们喜闻乐见的 &lt;strong&gt;二级域名（SLD）&lt;/strong&gt;了，二级域名注册得最多，也相对便宜。原因是顶级域名提供商可以提供几乎无限的二级域名，这里的 example 就是二级域名。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;与这个逻辑类似的，如果你有了一个二级域名，其下级域名你就可以随意定义。&lt;/p&gt;
+
+&lt;h2 id=&quot;glue-records&quot;&gt;胶水记录&lt;/h2&gt;
+&lt;p&gt;如果你购买过域名，你也许就为你的域名设置过 DNS 服务器（nameservers），这些服务器将负责你的域名的解析工作。那么，如果域名服务器用了域名，域名服务器的域名该如何解析呢？&lt;br /&gt;
+这就要提到 &lt;strong&gt;胶水记录（glue records）&lt;/strong&gt;了，胶水记录在注册商填写，是向上级域名数据库中添加指定主机的 A 或 AAAA 记录。也就是说，查询域名服务器的地址应当去上一级域名的域名服务器中查询。通常这个主机记录不能当作普通 DNS 使用，因为浏览器并不会查询胶水记录。&lt;/p&gt;
+
+&lt;h2 id=&quot;dnssec&quot;&gt;DNSSEC：RRSIG 和 DS 记录&lt;/h2&gt;
+&lt;p&gt;DNS 协议并不安全，正如 HTTP 一样。而 DNSSEC 的目的就引入了非对称加密技术到 DNS 查询的过程当中。&lt;br /&gt;
+在启用了 DNSSEC 的域名，Whois 记录会显示 DNSSEC 的状态，而 DS（Delegation Signer）记录保存在上级域名服务器中，它显示了公钥的 Hash 值。在每次查询中都会返回一个 RRSIG 记录，这个记录是自动使用私钥加密后的结果，也就是说只能通过你发布的公钥（即 DNSKEY，发布在上级域名服务器的 DS 记录中）解密，这就保证了传输的安全性。
+&lt;img src=&quot;https://img.akacdn.app/cceb953c733c04f632474f63f144994c.png&quot; alt=&quot;cceb953c733c04f632474f63f144994c.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;soa&quot;&gt;NS 和 SOA 记录&lt;/h2&gt;
+&lt;p&gt;SOA 的记录确定了一个 Zone（可以简单理解成一个域名）的开始，它包含了一个主要的权威域名服务器、邮箱和 TTL 等内容。而 NS 记录则保存着该域名的主要和备用权威域名服务器。&lt;/p&gt;
+
+&lt;h2 id=&quot;ptr&quot;&gt;PTR 反向解析记录&lt;/h2&gt;
+&lt;p&gt;PTR 记录听上去非常抽象，但是它其实很简单！PTR 记录是将 IP 地址翻译成域名的记录，常用于垃圾邮件或者服务器位置鉴定。&lt;br /&gt;
+世界上有一种不常出现在公众视野的顶级域名：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;arpa.&lt;/code&gt;，而 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in-addr.arpa&lt;/code&gt; 和 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ip6.arpa&lt;/code&gt;，用于对应IPv4和IPv6的DNS反向查询功能。&lt;br /&gt;
+如果要查询 1.2.3.4 对应什么域名，只需要查询 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4.3.2.1.in-addr.arpa&lt;/code&gt;. 的 PTR 记录即可。有意思的是，在域名中每个八位对应的数字顺序是反过来的，而这和 IP 地址的构成有关。&lt;br /&gt;
+拥有 IP 的运营商只需要提供自己所在网段的 DNS 反向解析服务就好。如果你是租赁的 VPS，则 VPS 控制面板一般可以设置。
+&lt;img src=&quot;https://img.akacdn.app/a287553b8174cd62abbd9f55bc36338d.png&quot; alt=&quot;a287553b8174cd62abbd9f55bc36338d.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;dane&quot;&gt;DANE：TLSA 记录与 DNSSEC 的搭配&lt;/h2&gt;
+&lt;p&gt;TLSA 记录体现了什么端口什么协议用的什么证书，只有启用了 DNSSEC 后才有意义。我认为和 HPKP 非常类似，差别在于 TLSA 记录不会被浏览器缓存。&lt;br /&gt;
+配置好 TLSA 和 DNSSEC 后，就相当于为域名启用了 &lt;strong&gt;DANE（DNS-based Authentication of Named Entities）&lt;/strong&gt;  ，DANE 的状态可以在 &lt;a href=&quot;https://ssl-tools.net/&quot;&gt;SSL-Tools&lt;/a&gt; 中检测。&lt;/p&gt;
+
+&lt;h2 id=&quot;cname-flattening&quot;&gt;CNAME Flattening&lt;/h2&gt;
+&lt;p&gt;CNAME Flattening&lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 是一项加速 DNS 解析的技术，可参见 &lt;a href=&quot;https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/&quot;&gt;Introducing CNAME Flattening: RFC-Compliant CNAMEs at a Domain’s Root&lt;/a&gt;，它的原理是将 CNAME 翻译成 A 记录的工作交给 DNS 服务器，这将大大节省 CNAME 域名的查询时间。目前的服务商（Rage4，Cloudflare）大都只支持根域名的 CNAME Flattening，但这不意味着这项技术只能用于根域名：如果你使用 Powerdns 自建 DNS，你会发现它的 ALIAS 记录对任何主机均适用。&lt;/p&gt;
+
+&lt;h2 id=&quot;ttl&quot;&gt;TTL 缓存时间&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;TTL（Time- To-Live）&lt;/strong&gt;在域名解析中表示了一条域名解析记录在 DNS 服务器上缓存的时间，单位为秒。也就是说，如果你希望减轻 DNS 服务器的负担，TTL 就应尽量长，如果希望在更换解析后反应时间短，TTL 就应尽量短。&lt;/p&gt;
+
+&lt;h2 class=&quot;no_toc&quot; id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/zh-hans/%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F&quot;&gt;域名系统 - 维基百科，自由的百科全书&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.ibm.com/support/knowledgecenter/SSWSR9_11.6.0/com.ibm.mdshs.inspuser.doc/topics/c_inspuser_trigger_record_glue_record_differences.html&quot;&gt;IBM Knowledge Center - The difference between a trigger record and a glue record&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://tools.ietf.org/html/rfc4509&quot;&gt;RFC 4509 - Use of SHA-256 in DNSSEC Delegation Signer (DS) Resource Records (RRs)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://tools.ietf.org/html/rfc2181&quot;&gt;RFC 2181 - Clarifications to the DNS Specification&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;ICANN已在2015年允许注册顶级域名，但其条件和审查及其严格：&lt;a href=&quot;https://newgtlds.icann.org/en/applicants/global-support/faqs/faqs-en&quot;&gt;Frequently-Asked-Questions-ICANN-New-gTLDs&lt;/a&gt;. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;部分DNS提供商称其为ANAME或其它名称，这是因为该标准并没有普及导致的命名不规范，通常也理解为私有类型。 &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>国内有关现代的 DNS 中文资料少之又少，对 DNS 的了解大都仅限于 A - AAAA 之间，我就在此将这些坑记下吧。  网域名称系统（英文：Domain Name System，缩写：DNS）是互联网的一项服务。它作为将域名和 IP 地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS 使用 TCP 和 UDP 端口 53。当前，对于每一级域名长度的限制是 63 个字符，域名总长度则不能超过 253 个字符。Table of Contents  根、顶和二级域名  胶水记录  DNSSEC：RRSIG 和 DS 记录  NS 和 SOA 记录  PTR 反向解析记录  DANE：TLSA 记录与 DNSSEC 的搭配  CNAME Flattening  TTL 缓存时间根、顶和二级域名使用 dig 软件查询一个域名 dig example.com ：  会发现诸如 example.com 的域名并不完整，它的完整写法是 example.com. 。最后的这一个点就是根域名。在日常使用中，因为所有的域名都带有这一个点，我们通常就将其省略。如果为这个命令加上一个 +trace 参数，就可以看到它首先会查询 “.” 这个域名。而全球的 13 台根域名服务器 (Alternative DNS root) 的 IP 地址往往被硬编码在操作系统中。  然后 dig 软件会向根域名服务器查询 com. 域名的域名服务器，这里的 com（类似的有 cn, hk, me 等）就是 顶级域名（TLD）。你可以注册顶级域名1 ，但其条件要求十分苛刻。顶级域名一般由大公司从 ICANN 购买，购买后大公司就有资格建立如 com. 的域名服务器，并录入到根域名系统中。  再然后就是我们喜闻乐见的 二级域名（SLD）了，二级域名注册得最多，也相对便宜。原因是顶级域名提供商可以提供几乎无限的二级域名，这里的 example 就是二级域名。与这个逻辑类似的，如果你有了一个二级域名，其下级域名你就可以随意定义。胶水记录如果你购买过域名，你也许就为你的域名设置过 DNS 服务器（nameservers），这些服务器将负责你的域名的解析工作。那么，如果域名服务器用了域名，域名服务器的域名该如何解析呢？这就要提到 胶水记录（glue records）了，胶水记录在注册商填写，是向上级域名数据库中添加指定主机的 A 或 AAAA 记录。也就是说，查询域名服务器的地址应当去上一级域名的域名服务器中查询。通常这个主机记录不能当作普通 DNS 使用，因为浏览器并不会查询胶水记录。DNSSEC：RRSIG 和 DS 记录DNS 协议并不安全，正如 HTTP 一样。而 DNSSEC 的目的就引入了非对称加密技术到 DNS 查询的过程当中。在启用了 DNSSEC 的域名，Whois 记录会显示 DNSSEC 的状态，而 DS（Delegation Signer）记录保存在上级域名服务器中，它显示了公钥的 Hash 值。在每次查询中都会返回一个 RRSIG 记录，这个记录是自动使用私钥加密后的结果，也就是说只能通过你发布的公钥（即 DNSKEY，发布在上级域名服务器的 DS 记录中）解密，这就保证了传输的安全性。NS 和 SOA 记录SOA 的记录确定了一个 Zone（可以简单理解成一个域名）的开始，它包含了一个主要的权威域名服务器、邮箱和 TTL 等内容。而 NS 记录则保存着该域名的主要和备用权威域名服务器。PTR 反向解析记录PTR 记录听上去非常抽象，但是它其实很简单！PTR 记录是将 IP 地址翻译成域名的记录，常用于垃圾邮件或者服务器位置鉴定。世界上有一种不常出现在公众视野的顶级域名：arpa.，而 in-addr.arpa 和 ip6.arpa，用于对应IPv4和IPv6的DNS反向查询功能。如果要查询 1.2.3.4 对应什么域名，只需要查询 4.3.2.1.in-addr.arpa. 的 PTR 记录即可。有意思的是，在域名中每个八位对应的数字顺序是反过来的，而这和 IP 地址的构成有关。拥有 IP 的运营商只需要提供自己所在网段的 DNS 反向解析服务就好。如果你是租赁的 VPS，则 VPS 控制面板一般可以设置。DANE：TLSA 记录与 DNSSEC 的搭配TLSA 记录体现了什么端口什么协议用的什么证书，只有启用了 DNSSEC 后才有意义。我认为和 HPKP 非常类似，差别在于 TLSA 记录不会被浏览器缓存。配置好 TLSA 和 DNSSEC 后，就相当于为域名启用了 DANE（DNS-based Authentication of Named Entities）  ，DANE 的状态可以在 SSL-Tools 中检测。CNAME FlatteningCNAME Flattening2 是一项加速 DNS 解析的技术，可参见 Introducing CNAME Flattening: RFC-Compliant CNAMEs at a Domain’s Root，它的原理是将 CNAME 翻译成 A 记录的工作交给 DNS 服务器，这将大大节省 CNAME 域名的查询时间。目前的服务商（Rage4，Cloudflare）大都只支持根域名的 CNAME Flattening，但这不意味着这项技术只能用于根域名：如果你使用 Powerdns 自建 DNS，你会发现它的 ALIAS 记录对任何主机均适用。TTL 缓存时间TTL（Time- To-Live）在域名解析中表示了一条域名解析记录在 DNS 服务器上缓存的时间，单位为秒。也就是说，如果你希望减轻 DNS 服务器的负担，TTL 就应尽量长，如果希望在更换解析后反应时间短，TTL 就应尽量短。References域名系统 - 维基百科，自由的百科全书IBM Knowledge Center - The difference between a trigger record and a glue recordRFC 4509 - Use of SHA-256 in DNSSEC Delegation Signer (DS) Resource Records (RRs)RFC 2181 - Clarifications to the DNS Specification            ICANN已在2015年允许注册顶级域名，但其条件和审查及其严格：Frequently-Asked-Questions-ICANN-New-gTLDs. &amp;#8617;&amp;#xfe0e;              部分DNS提供商称其为ANAME或其它名称，这是因为该标准并没有普及导致的命名不规范，通常也理解为私有类型。 &amp;#8617;&amp;#xfe0e;      </summary></entry><entry><title>I spent a lot of time watching him</title><id>https://gufeng.sh/note/time-watching/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/time-watching/" /><published>2018-01-23T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;blockquote&gt; &lt;p&gt;We’re both attracted to characters, and we saw that in each other. I spent a lot of time watching him and he spent a lot of time loving being watched. But if you think he’s the first red-wine-drinking, pretty-boy rocker in skinny jeans I’ve … been associated with, you’re out of your fucking mind.&lt;/p&gt; &lt;footer&gt; &lt;cite&gt;&lt;a href=&quot;https://genius.com/Halsey-colors-lyrics&quot;&gt;Halsey -《Colors》&lt;/a&gt;&lt;/cite&gt; &lt;/footer&gt; &lt;/blockquote&gt;
+
+          
+          
+        
+      
+        </content><summary> We’re both attracted to characters, and we saw that in each other. I spent a lot of time watching him and he spent a lot of time loving being watched. But if you think he’s the first red-wine-drinking, pretty-boy rocker in skinny jeans I’ve … been associated with, you’re out of your fucking mind.  Halsey -《Colors》  </summary></entry><entry><title>TLSv1.3 with nginx</title><id>https://gufeng.sh/note/tlsv1.3-with-nginx/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/tlsv1.3-with-nginx/" /><published>2018-01-21T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;p&gt;I’ve already deployed TLSv1.3 on this server. Now you can verify that in the Security tab.&lt;/p&gt;
+
+&lt;h3 id=&quot;notice&quot;&gt;Notice&lt;/h3&gt;
+&lt;p&gt;Notice that TLSv1.3 supports are not enabled by default on most browsers. Like Google Chrome, you may need to turn it on manually at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chrome://flags/#tls13-variant&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Clone the openssl with tls1.3-draft-18 branch:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; tls1.3-draft-18 &lt;span class=&quot;nt&quot;&gt;--single-branch&lt;/span&gt; https://github.com/openssl/openssl.git openssl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then just compile Nginx with OpenSSL library:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wget &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; https://nginx.org/download/nginx-1.13.4.tar.gz
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;tar &lt;/span&gt;zxf nginx-1.13.4.tar.gz
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;nginx-1.13.4/
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./configure &lt;span class=&quot;nt&quot;&gt;--with-openssl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;PATH_TO_CLONED_OPENSSL &lt;span class=&quot;nt&quot;&gt;--with-openssl-opt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'enable-tls1_3'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-http_v2_module&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-http_ssl_module&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-http_gzip_static_module&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;make
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;make &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then you have to enable TLSv1.3 in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt; , whose ciphers and protocols need to be updated:&lt;/p&gt;
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ssl_protocols&lt;/span&gt;              &lt;span class=&quot;n&quot;&gt;TLSv1&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TLSv1&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TLSv1&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TLSv1&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;;
+&lt;span class=&quot;n&quot;&gt;ssl_ciphers&lt;/span&gt;                &lt;span class=&quot;n&quot;&gt;TLS13&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;AES&lt;/span&gt;-&lt;span class=&quot;m&quot;&gt;256&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;GCM&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;SHA384&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;TLS13&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;CHACHA20&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;POLY1305&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;SHA256&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;TLS13&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;AES&lt;/span&gt;-&lt;span class=&quot;m&quot;&gt;128&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;GCM&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;SHA256&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;TLS13&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;AES&lt;/span&gt;-&lt;span class=&quot;m&quot;&gt;128&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;CCM&lt;/span&gt;-&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;SHA256&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;TLS13&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;AES&lt;/span&gt;-&lt;span class=&quot;m&quot;&gt;128&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;CCM&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;SHA256&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;EECDH&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;CHACHA20&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;EECDH&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;CHACHA20&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;draft&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;EECDH&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;ECDSA&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;AES128&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;EECDH&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;aRSA&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;AES128&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;RSA&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;AES128&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;EECDH&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;ECDSA&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;AES256&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;EECDH&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;aRSA&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;AES256&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;RSA&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;AES256&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;EECDH&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;ECDSA&lt;/span&gt;+&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DES&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;EECDH&lt;/span&gt;+&lt;span class=&quot;n&quot;&gt;aRSA&lt;/span&gt;+&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DES&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;RSA&lt;/span&gt;+&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DES&lt;/span&gt;:!&lt;span class=&quot;n&quot;&gt;MD5&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://imququ.com/post/enable-tls-1-3.html&quot;&gt;本博客开始支持 TLS 1.3 | JerryQu 的小站&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/ajhaydock/BoringNginx&quot;&gt;ajhaydock/BoringNginx: Script + Dockerfile to build Nginx with Google’s BoringSSL.&lt;/a&gt;&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>I’ve already deployed TLSv1.3 on this server. Now you can verify that in the Security tab.NoticeNotice that TLSv1.3 supports are not enabled by default on most browsers. Like Google Chrome, you may need to turn it on manually at chrome://flags/#tls13-variantClone the openssl with tls1.3-draft-18 branch:$ git clone -b tls1.3-draft-18 --single-branch https://github.com/openssl/openssl.git opensslThen just compile Nginx with OpenSSL library:$ wget -c https://nginx.org/download/nginx-1.13.4.tar.gz$ tar zxf nginx-1.13.4.tar.gz$ cd nginx-1.13.4/$ ./configure --with-openssl=PATH_TO_CLONED_OPENSSL --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module$ make$ sudo make installThen you have to enable TLSv1.3 in the nginx.conf , whose ciphers and protocols need to be updated:ssl_protocols              TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;ssl_ciphers                TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;References本博客开始支持 TLS 1.3 | JerryQu 的小站ajhaydock/BoringNginx: Script + Dockerfile to build Nginx with Google’s BoringSSL.</summary></entry><entry><title>Passport</title><id>https://gufeng.sh/work/passport/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/passport/" /><published>2018-01-20T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;h2 id=&quot;the-passport&quot;&gt;The Passport&lt;/h2&gt;
+
+&lt;p&gt;Many people have trouble remembering their various passwords. For security reasons, experts advise us to change passwords frequently. Simple passwords are not recommended too. It is too hard to remember all of them, so… The passport was born for this.&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-more&quot;&gt;What’s more&lt;/h2&gt;
+&lt;h1 id=&quot;visit-official-site&quot;&gt;&lt;a href=&quot;https://ifengge.cn/passport/&quot;&gt;Visit official site&lt;/a&gt;&lt;/h1&gt;
+
+          
+          
+        
+      
+        </content><summary>The PassportMany people have trouble remembering their various passwords. For security reasons, experts advise us to change passwords frequently. Simple passwords are not recommended too. It is too hard to remember all of them, so… The passport was born for this.What’s moreVisit official site</summary></entry><entry><title>Use SMTP Server by Proxy for PHP</title><id>https://gufeng.sh/note/use-proxy-smtp-server-for-php-mail-function/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/use-proxy-smtp-server-for-php-mail-function/" /><published>2018-01-05T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;blockquote&gt;
+  &lt;p&gt;开发时应注意此坑，还是应该直接上 PHPMailer&lt;br /&gt;
+It is worth noting that the mail() function is not suitable for larger volumes of email in a loop. This function opens and closes an SMTP socket for each email, which is not very efficient.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;原理&quot;&gt;原理&lt;/h2&gt;
+&lt;p&gt;PHP 使用系统自带的 sendmail 二进制文件发送邮件，但是我们可以在 php.ini 中更换 sendmail 程序。
+ssmtp 可以让我们使用外部的 smtp 服务器像 sendmail 一样发送邮件，我们只需将 php.ini 中的 sendmail 更换为 ssmtp 即可。&lt;/p&gt;
+
+&lt;h2 id=&quot;安装&quot;&gt;安装&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum install -y ssmtp which&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;配置&quot;&gt;配置&lt;/h2&gt;
+&lt;p&gt;首先用 which 找到 ssmtp 的安装位置：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;which ssmtp&lt;/code&gt;，然后编辑配置 ssmtp 配置文件：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vim /etc/ssmtp/ssmtpd.conf&lt;/code&gt;
+&lt;strong&gt;里面的说明很详细，但是特别注意如果你的 smtp 服务器要求验证，需要手动添加两行：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;AuthUser&lt;/span&gt;=&lt;span class=&quot;n&quot;&gt;username&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;AuthPass&lt;/span&gt;=&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;搞定后还需要配置一下 php.ini：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vim /etc/php.ini&lt;/code&gt;，搜索 sendmail 并将 sendmail 路径替换为 ssmtp 路径即可。最后别忘了重启：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;systemctl restart php-fpm
+systemctl restart httpd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>  开发时应注意此坑，还是应该直接上 PHPMailerIt is worth noting that the mail() function is not suitable for larger volumes of email in a loop. This function opens and closes an SMTP socket for each email, which is not very efficient.原理PHP 使用系统自带的 sendmail 二进制文件发送邮件，但是我们可以在 php.ini 中更换 sendmail 程序。ssmtp 可以让我们使用外部的 smtp 服务器像 sendmail 一样发送邮件，我们只需将 php.ini 中的 sendmail 更换为 ssmtp 即可。安装yum install -y ssmtp which配置首先用 which 找到 ssmtp 的安装位置：which ssmtp，然后编辑配置 ssmtp 配置文件：vim /etc/ssmtp/ssmtpd.conf里面的说明很详细，但是特别注意如果你的 smtp 服务器要求验证，需要手动添加两行：AuthUser=usernameAuthPass=password搞定后还需要配置一下 php.ini：vim /etc/php.ini，搜索 sendmail 并将 sendmail 路径替换为 ssmtp 路径即可。最后别忘了重启：systemctl restart php-fpmsystemctl restart httpd</summary></entry><entry><title>Gitbook Image Viewer</title><id>https://gufeng.sh/work/gitbook-imageviewer/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/gitbook-imageviewer/" /><published>2017-07-23T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;blockquote&gt;
+  &lt;p&gt;Electron 的图片点击默认是没有任何效果的，如果用户要查看大图就非常麻烦，同时，他默认打开链接的方式是在自己中打开，用户体验非常糟糕&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;需要-jquery&quot;&gt;需要 jQuery&lt;/h2&gt;
+
+&lt;p&gt;在 &lt;code&gt;&amp;lt;body&amp;gt;&lt;/code&gt; 标签的最后加入&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;renderer-process&quot;&gt;Renderer Process&lt;/h2&gt;
+
+&lt;p&gt;在网页的 javascript 中，我们使用 ipc 和 Main Process 通信，官方文档中写道：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ipcRenderer&lt;/code&gt; module is an instance of the &lt;a href=&quot;https://nodejs.org/api/events.html#events_class_eventemitter&quot;&gt;EventEmitter&lt;/a&gt; class. It provides a few methods so you can send synchronous and asynchronous messages from the render process (web page) to the main process. You can also receive replies from the main process.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;所以我们在 Renderer Process 中使用 ipcRenderer 模块&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;ipcRenderer&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;electron&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;钩住图片和链接的的 onclick&lt;/p&gt;
+
+&lt;p&gt;当图片或者链接被点击时，我们阻止 Electron 的默认操作并将请求发送到 Main Process 中处理，因为和主线程息息相关，我们是用同步的方式发送请求&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;h4 id=&quot;ipcrenderersendsyncchannel-arg1-arg2-&quot;&gt;ipcRenderer.sendSync(channel[, arg1][, arg2][, …])&lt;/h4&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;channel&lt;/code&gt; String&lt;/li&gt;
+    &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;...args&lt;/code&gt; any[]&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;p&gt;Send a message to the main process synchronously via &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;channel&lt;/code&gt;, you can also send arbitrary arguments. Arguments will be serialized in JSON internally and hence no functions or prototype chain will be included.&lt;/p&gt;
+
+  &lt;p&gt;The main process handles it by listening for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;channel&lt;/code&gt; with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ipcMain&lt;/code&gt; module, and replies by setting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;event.returnValue&lt;/code&gt;.&lt;/p&gt;
+
+  &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Sending a synchronous message will block the whole renderer process, unless you know what you are doing you should never use it.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;⚠ 注：由于 macOS 中的 预览.app 打开 gif 时会卡死，所以此处选择了忽略 gif 的点击事件&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;rehook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;attr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;endsWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;back.png&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;endsWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.gif&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;ipcRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sendSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;openPic&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;link&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;attr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;startsWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)){&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;preventDefault&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;ipcRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sendSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;openURL&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;endsWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.pdf&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)){&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;preventDefault&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;ipcRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sendSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;openPDF&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这样，在网页加载完成后调用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rehook()&lt;/code&gt; 即可钩住，比如在网页的最后使用&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;nx&quot;&gt;rehook&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;但是要注意的是，如果使用 pjax 刷新了页面，需要手动重新 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rehook()&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;main-process&quot;&gt;Main Process&lt;/h2&gt;
+
+&lt;p&gt;主进程中，我们需要：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ipcMain 模块 - 用于接受 ipcRenderer 传输的内容&lt;/li&gt;
+  &lt;li&gt;path 模块 - 用于构建路径&lt;/li&gt;
+  &lt;li&gt;shell 模块 - 用于打开文件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;BrowserWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;ipcMain&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;electron&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;electron&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shell&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;我们可以使用 shell.openExternal (url) 来在浏览器中打开链接&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;h4 id=&quot;shellopenexternalurl&quot;&gt;shell.openExternal(url)&lt;/h4&gt;
+
+  &lt;p&gt;url String
+options Object (可选) macOS
+activate Boolean - true 让打开的应用在前面显示，默认为 true.
+callback Function (可选) - 如果指定将执行异步打开. macOS
+error Error&lt;/p&gt;
+
+&lt;/blockquote&gt;
+
+&lt;p&gt;在 ipcMain 接收到指定的请求后打开文件或网页&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;ipcMain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;openPic&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fpath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;shell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;openItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;returnValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fpath&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;ipcMain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;openURL&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;openUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;shell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;openExternal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;openUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;returnValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;openUrl&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>  Electron 的图片点击默认是没有任何效果的，如果用户要查看大图就非常麻烦，同时，他默认打开链接的方式是在自己中打开，用户体验非常糟糕需要 jQuery在 &amp;lt;body&amp;gt; 标签的最后加入&amp;lt;script src=&quot;https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt;Renderer Process在网页的 javascript 中，我们使用 ipc 和 Main Process 通信，官方文档中写道：  The ipcRenderer module is an instance of the EventEmitter class. It provides a few methods so you can send synchronous and asynchronous messages from the render process (web page) to the main process. You can also receive replies from the main process.所以我们在 Renderer Process 中使用 ipcRenderer 模块const {  ipcRenderer} = window.require(&quot;electron&quot;)钩住图片和链接的的 onclick当图片或者链接被点击时，我们阻止 Electron 的默认操作并将请求发送到 Main Process 中处理，因为和主线程息息相关，我们是用同步的方式发送请求  ipcRenderer.sendSync(channel[, arg1][, arg2][, …])      channel String    ...args any[]    Send a message to the main process synchronously via channel, you can also send arbitrary arguments. Arguments will be serialized in JSON internally and hence no functions or prototype chain will be included.  The main process handles it by listening for channel with ipcMain module, and replies by setting event.returnValue.  Note: Sending a synchronous message will block the whole renderer process, unless you know what you are doing you should never use it.⚠ 注：由于 macOS 中的 预览.app 打开 gif 时会卡死，所以此处选择了忽略 gif 的点击事件function rehook() {  $('img').on(&quot;click&quot;, function(event) {    var file = $(event.target).attr('src')    if (!file.endsWith(&quot;back.png&quot;) &amp;amp;&amp;amp; !file.endsWith(&quot;.gif&quot;)) {      ipcRenderer.sendSync('openPic', file)    }  })  $('a').on(&quot;click&quot;, function(event) {    var link = $(event.target).attr('href')    if(link.startsWith(&quot;http&quot;)){      event.preventDefault()      ipcRenderer.sendSync('openURL', link)    }else if(link.endsWith(&quot;.pdf&quot;)){      event.preventDefault()      ipcRenderer.sendSync('openPDF', link)    }  })}这样，在网页加载完成后调用 rehook() 即可钩住，比如在网页的最后使用&amp;lt;script&amp;gt;	rehook()&amp;lt;/script&amp;gt;但是要注意的是，如果使用 pjax 刷新了页面，需要手动重新 rehook()Main Process主进程中，我们需要：  ipcMain 模块 - 用于接受 ipcRenderer 传输的内容  path 模块 - 用于构建路径  shell 模块 - 用于打开文件const {  app,  BrowserWindow,  ipcMain} = require('electron')const path = require('path')const shell = require('electron').shell我们可以使用 shell.openExternal (url) 来在浏览器中打开链接  shell.openExternal(url)  url Stringoptions Object (可选) macOSactivate Boolean - true 让打开的应用在前面显示，默认为 true.callback Function (可选) - 如果指定将执行异步打开. macOSerror Error在 ipcMain 接收到指定的请求后打开文件或网页ipcMain.on(&quot;openPic&quot;, (sender, filename) =&amp;gt; {  var fpath = path.join(__dirname, filename)  shell.openItem(fpath)  sender.returnValue = fpath})ipcMain.on(&quot;openURL&quot;, (sender, openUrl) =&amp;gt; {  shell.openExternal(openUrl)  sender.returnValue = openUrl})</summary></entry><entry><title>iOS Workflows</title><id>https://gufeng.sh/work/ios-workflows/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/ios-workflows/" /><published>2017-05-04T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;h2 id=&quot;删除最后截图&quot;&gt;删除最后截图&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://workflow.is/workflows/0a7ca76a434446e59df80601ba953953&quot;&gt;添加到 Workflow&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;一键删除最后一张截图，适合发给朋友了就跑的人（逃&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://img.akacdn.app/2017/05/04/IMG_0060.png&quot; alt=&quot;IMG_0060.png&quot; /&gt;&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>删除最后截图添加到 Workflow一键删除最后一张截图，适合发给朋友了就跑的人（逃</summary></entry><entry><title>Word Line Spacer</title><id>https://gufeng.sh/work/word-line-spacer/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/word-line-spacer/" /><published>2017-05-02T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;blockquote&gt;
+  &lt;p&gt;仅适用于 Microsoft Word，且必须支持 VBA 脚本&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;前两天语文老师想让我来给我们班做一份练字用的小册子，要求是需要方格子，并且是上面一行下面要空一行留给大家写字用。可是在用 Word 创建完格子后才发现格子是底图，并不是和文字挂钩的，这时如果调整行距会导致整篇都混乱掉，只好老老实实的保持行高，在每一行结束都换行一次了。&lt;/p&gt;
+
+&lt;p&gt;由于数据量非常大，至少有 50 页，只好用 “宏” 来解决&lt;/p&gt;
+
+&lt;div class=&quot;language-vb highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;Sub&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;宏1()&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;'选中整行，以便确定此行是否有内容&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;Selection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Expand&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wdLine&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;'MsgBox (Len(Selection.Text) = 1)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;If&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Selection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;Then&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;'此时没有内容，但是不知道为什么会返回有一个字，这里的 1 请根据测试更改&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;'向下移动一行&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Selection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MoveDown&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Unit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wdLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;End&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;If&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;'将光标移动到此行的最后一个字&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Selection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EndKey&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Unit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wdLine&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;'键入两次换行&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Selection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TypeParagraph&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Selection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TypeParagraph&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;End&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;Sub&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;因为我使用了快捷键绑定以便在程序运行出现偏差时实时做出修正，所以在程序中没有使用循环。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当此脚本跑遍了整个文档时，基本就大功告成了，但是你会发现这时会多出很多行，其实解决起来也很简单，只需要在 “查找和替换” 中把 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;^p^p^p&lt;/code&gt; 替换为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;^p^p&lt;/code&gt; 即可，这一步需要重复多次，直到没有内容被替换为止。&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>  仅适用于 Microsoft Word，且必须支持 VBA 脚本前两天语文老师想让我来给我们班做一份练字用的小册子，要求是需要方格子，并且是上面一行下面要空一行留给大家写字用。可是在用 Word 创建完格子后才发现格子是底图，并不是和文字挂钩的，这时如果调整行距会导致整篇都混乱掉，只好老老实实的保持行高，在每一行结束都换行一次了。由于数据量非常大，至少有 50 页，只好用 “宏” 来解决Sub 宏1()    '选中整行，以便确定此行是否有内容    Selection.Expand wdLine    'MsgBox (Len(Selection.Text) = 1)    If Len(Selection.Text) = 1 Then        '此时没有内容，但是不知道为什么会返回有一个字，这里的 1 请根据测试更改        '向下移动一行        Selection.MoveDown Unit:=wdLine, Count:=1    End If    '将光标移动到此行的最后一个字    Selection.EndKey Unit:=wdLine    '键入两次换行    Selection.TypeParagraph    Selection.TypeParagraphEnd Sub因为我使用了快捷键绑定以便在程序运行出现偏差时实时做出修正，所以在程序中没有使用循环。当此脚本跑遍了整个文档时，基本就大功告成了，但是你会发现这时会多出很多行，其实解决起来也很简单，只需要在 “查找和替换” 中把 ^p^p^p 替换为 ^p^p 即可，这一步需要重复多次，直到没有内容被替换为止。</summary></entry><entry><title>Verify A Real Email Address</title><id>https://gufeng.sh/note/email-address-verify/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/note/email-address-verify/" /><published>2017-02-19T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;blockquote&gt;
+  &lt;p&gt;点击查看 &lt;a href=&quot;https://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx/&quot;&gt;原文&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;e-mail-地址还可以是这些&quot;&gt;E-Mail 地址还可以是这些？？&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Abc\@def@example.com&lt;/li&gt;
+  &lt;li&gt;Fred\ Bloggs@example.com&lt;/li&gt;
+  &lt;li&gt;Joe.\Blow@example.com&lt;/li&gt;
+  &lt;li&gt;“Abc@def”@example.com&lt;/li&gt;
+  &lt;li&gt;“Fred Bloggs”@example.com&lt;/li&gt;
+  &lt;li&gt;customer/department=shipping@example.com&lt;/li&gt;
+  &lt;li&gt;$A12345@example.com&lt;/li&gt;
+  &lt;li&gt;!def!xyz%abc@example.com&lt;/li&gt;
+  &lt;li&gt;_somename@example.com&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;如何写正则&quot;&gt;如何写正则&lt;/h2&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;EmailTests&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;^(?!\.)(&quot;&quot;([^&quot;&quot;\r\\]|\\[&quot;&quot;\r\\])*&quot;&quot;|&quot;&lt;/span&gt; 
+    &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;([-a-z0-9!#$%&amp;amp;'*+/=?^_`{|}~]|(?&amp;lt;!\.)\.)*)(?&amp;lt;!\.)&quot;&lt;/span&gt; 
+    &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;nc&quot;&gt;Regex&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;regex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Regex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RegexOptions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;IgnoreCase&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;AreEqual&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;regex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;IsMatch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Problem with '&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;'. Expected &quot;&lt;/span&gt;  
+    &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; but was not that.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[RowTest]
+[Row(@&quot;NotAnEmail&quot;, false)]
+[Row(@&quot;@NotAnEmail&quot;, false)]
+[Row(@&quot;&quot;&quot;test\\blah&quot;&quot;@example.com&quot;, true)]
+[Row(@&quot;&quot;&quot;test\blah&quot;&quot;@example.com&quot;, false)]
+[Row(&quot;\&quot;test\\\rblah\&quot;@example.com&quot;, true)]
+[Row(&quot;\&quot;test\rblah\&quot;@example.com&quot;, false)]
+[Row(@&quot;&quot;&quot;test\&quot;&quot;blah&quot;&quot;@example.com&quot;, true)]
+[Row(@&quot;&quot;&quot;test&quot;&quot;blah&quot;&quot;@example.com&quot;, false)]
+[Row(@&quot;customer/department@example.com&quot;, true)]
+[Row(@&quot;$A12345@example.com&quot;, true)]
+[Row(@&quot;!def!xyz%abc@example.com&quot;, true)]
+[Row(@&quot;_Yosemite.Sam@example.com&quot;, true)]
+[Row(@&quot;~@example.com&quot;, true)]
+[Row(@&quot;.wooly@example.com&quot;, false)]
+[Row(@&quot;wo..oly@example.com&quot;, false)]
+[Row(@&quot;pootietang.@example.com&quot;, false)]
+[Row(@&quot;.@example.com&quot;, false)]
+[Row(@&quot;&quot;&quot;Austin@Powers&quot;&quot;@example.com&quot;, true)]
+[Row(@&quot;Ima.Fool@example.com&quot;, true)]
+[Row(@&quot;&quot;&quot;Ima.Fool&quot;&quot;@example.com&quot;, true)]
+[Row(@&quot;&quot;&quot;Ima Fool&quot;&quot;@example.com&quot;, true)]
+[Row(@&quot;Ima Fool@example.com&quot;, false)]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+          
+          
+        
+      
+        </content><summary>  点击查看 原文E-Mail 地址还可以是这些？？  Abc\@def@example.com  Fred\ Bloggs@example.com  Joe.\Blow@example.com  “Abc@def”@example.com  “Fred Bloggs”@example.com  customer/department=shipping@example.com  $A12345@example.com  !def!xyz%abc@example.com  _somename@example.com如何写正则public void EmailTests(string email, bool expected){  string pattern = @&quot;^(?!\.)(&quot;&quot;([^&quot;&quot;\r\\]|\\[&quot;&quot;\r\\])*&quot;&quot;|&quot;     + @&quot;([-a-z0-9!#$%&amp;amp;'*+/=?^_`{|}~]|(?&amp;lt;!\.)\.)*)(?&amp;lt;!\.)&quot;     + @&quot;@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$&quot;;  Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);  Assert.AreEqual(expected, regex.IsMatch(email)    , &quot;Problem with '&quot; + email + &quot;'. Expected &quot;      + expected + &quot; but was not that.&quot;);}运行结果：[RowTest][Row(@&quot;NotAnEmail&quot;, false)][Row(@&quot;@NotAnEmail&quot;, false)][Row(@&quot;&quot;&quot;test\\blah&quot;&quot;@example.com&quot;, true)][Row(@&quot;&quot;&quot;test\blah&quot;&quot;@example.com&quot;, false)][Row(&quot;\&quot;test\\\rblah\&quot;@example.com&quot;, true)][Row(&quot;\&quot;test\rblah\&quot;@example.com&quot;, false)][Row(@&quot;&quot;&quot;test\&quot;&quot;blah&quot;&quot;@example.com&quot;, true)][Row(@&quot;&quot;&quot;test&quot;&quot;blah&quot;&quot;@example.com&quot;, false)][Row(@&quot;customer/department@example.com&quot;, true)][Row(@&quot;$A12345@example.com&quot;, true)][Row(@&quot;!def!xyz%abc@example.com&quot;, true)][Row(@&quot;_Yosemite.Sam@example.com&quot;, true)][Row(@&quot;~@example.com&quot;, true)][Row(@&quot;.wooly@example.com&quot;, false)][Row(@&quot;wo..oly@example.com&quot;, false)][Row(@&quot;pootietang.@example.com&quot;, false)][Row(@&quot;.@example.com&quot;, false)][Row(@&quot;&quot;&quot;Austin@Powers&quot;&quot;@example.com&quot;, true)][Row(@&quot;Ima.Fool@example.com&quot;, true)][Row(@&quot;&quot;&quot;Ima.Fool&quot;&quot;@example.com&quot;, true)][Row(@&quot;&quot;&quot;Ima Fool&quot;&quot;@example.com&quot;, true)][Row(@&quot;Ima Fool@example.com&quot;, false)]</summary></entry><entry><title>Dalcho - Another Typecho Theme</title><id>https://gufeng.sh/work/dalcho/</id><link rel="alternate" type="text/html" href="https://gufeng.sh/work/dalcho/" /><published>2016-10-26T00:00:00+08:00</published><updated>2021-01-01T17:34:28+08:00</updated><author><name>Gufeng Shen</name><uri>https://gufeng.sh/</uri><email>t@ifengge.cn</email></author><content type="html" xml:base="https://gufeng.sh/">
+          
+            &lt;blockquote&gt;
+  &lt;p&gt;Dalcho 是一款简洁大气而不失功能的 Typecho 主题&lt;br /&gt;
+停更，目前已更新至版本 v1.2
+Project suspended, with the latest version of v1.2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;截图和预览&quot;&gt;截图和预览&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://img.akacdn.app/dalcho.jpg&quot; alt=&quot;Preview&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;安装&quot;&gt;安装&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;下载主题&lt;/li&gt;
+  &lt;li&gt;将下载的文件解压，文件夹重命名为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dalcho&lt;/code&gt;，上传到 Typecho &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;usr/themes/&lt;/code&gt; 目录下&lt;/li&gt;
+  &lt;li&gt;登陆后台，在控制台下拉菜单中点击&lt;strong&gt;外观&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;找到 Dalcho，点击&lt;strong&gt;启用&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;根据需要更新设置外观&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;下载&quot;&gt;下载&lt;/h2&gt;
+&lt;p class=&quot;download&quot;&gt;&lt;a href=&quot;https://github.com/tearfulDalvik/Dalcho/archive/master.zip&quot;&gt;Download&lt;/a&gt; it from GitHub&lt;/p&gt;
+&lt;p class=&quot;download&quot;&gt;View source at &lt;a href=&quot;https://github.com/tearfulDalvik/Dalcho/&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;支持和协作&quot;&gt;支持和协作&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果使用有任何 Bug 欢迎提交 issue&lt;/li&gt;
+  &lt;li&gt;也欢迎 Watch、Star 亦或是 Fork&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;license&quot;&gt;License&lt;/h3&gt;
+
+&lt;p&gt;Copyright © 2016 &lt;a href=&quot;https://ifengge.cn/&quot;&gt;Dalvik&lt;/a&gt;&lt;br /&gt;
+Open source under &lt;a href=&quot;http://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;GNU General Public License v3.0&lt;/a&gt; license&lt;br /&gt;
+本项目已经提交到 Github：&lt;a href=&quot;https://github.com/tearfulDalvik/Dalcho/&quot;&gt;传送门&lt;/a&gt;&lt;/p&gt;
+
+          
+          
+        
+      
+        </content><summary>  Dalcho 是一款简洁大气而不失功能的 Typecho 主题停更，目前已更新至版本 v1.2Project suspended, with the latest version of v1.2截图和预览安装  下载主题  将下载的文件解压，文件夹重命名为 Dalcho，上传到 Typecho usr/themes/ 目录下  登陆后台，在控制台下拉菜单中点击外观  找到 Dalcho，点击启用  根据需要更新设置外观下载Download it from GitHubView source at GitHub支持和协作  如果使用有任何 Bug 欢迎提交 issue  也欢迎 Watch、Star 亦或是 ForkLicenseCopyright © 2016 DalvikOpen source under GNU General Public License v3.0 license本项目已经提交到 Github：传送门</summary></entry></feed>
